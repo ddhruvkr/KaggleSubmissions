@@ -75,16 +75,22 @@ trainY = to_categorical(trainY, 5)
 
 
 model = Sequential()
-output_dim = 16
+output_dim = 32
 model.add(Embedding(tokenizer_vocab_size, output_dim, input_length = maxWordCount))
 # embedding paramenter (input_size: vocab size, output_dim: size of vector space in which word is embedded, input_length: sentence size)
-model.add(LSTM(32,return_sequences=True))
+model.add(LSTM(64,return_sequences=True))
 # lstm output is 32
-model.add(Dropout(0.4))
-model.add(Conv1D(64, 5,activation='relu'))
-model.add(MaxPooling1D(pool_size=4))
+model.add(Dropout(0.5))
+model.add(LSTM(64,return_sequences=True))
+# lstm output is 32
+model.add(Dropout(0.5))
+model.add(LSTM(64,return_sequences=True))
+# lstm output is 32
+model.add(Dropout(0.5))
+model.add(Conv1D(32, 6,activation='relu'))
+model.add(MaxPooling1D(pool_size=5))
 #model.add(Dense(1200, activation='relu',W_constraint=maxnorm(1)))
-model.add(Dropout(0.4))
+model.add(Dropout(0.5))
 
 model.add(Flatten())
 model.add(Dense(32, activation='relu',W_constraint=maxnorm(1)))
@@ -102,11 +108,11 @@ model.summary()
 
 
 epochs=10
-batch_size=32
+batch_size=128
 model.fit(trainX_encodedPadded_words, trainY, epochs = epochs, batch_size=batch_size, verbose=1)
 
 
-f = open('Submission.csv', 'w')
+f = open('Submission_LSTM_CNN.csv', 'w')
 f.write('PhraseId,Sentiment\n')
 
 
