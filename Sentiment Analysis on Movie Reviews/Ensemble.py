@@ -69,13 +69,9 @@ encoded_words_test = tokenizer.texts_to_sequences(testX)
 encoded_words_validation = tokenizer.texts_to_sequences(validationX)
 #print(encoded_words_test)
 
-#since this is a classification problem early stopping should be on the basis of validation accuracy as compared to validation loss
-earlyStopping = EarlyStopping(monitor='val_acc',
-                              min_delta=0,
-                              patience=1,
-                              verbose=0, mode='auto')
 
-maxWordCount=64
+
+maxWordCount=60
 
 #padding all text to same size
 trainX_encodedPadded_words = sequence.pad_sequences(encoded_words_train, maxlen=maxWordCount)
@@ -83,37 +79,43 @@ testX_encodedPadded_words = sequence.pad_sequences(encoded_words_test, maxlen=ma
 validationX_encodedPadded_words = sequence.pad_sequences(encoded_words_validation, maxlen=maxWordCount)
 
 # One Hot Encoding
-validationY = to_categorical(validationY, 5)
 trainY = to_categorical(trainY, 5)
+validationY = to_categorical(validationY, 5)
 
-from keras.layers.normalization import BatchNormalization
+
 
 
 model = Sequential()
 output_dim = 32
 model.add(Embedding(tokenizer_vocab_size, output_dim, input_length = maxWordCount))
 # embedding paramenter (input_size: vocab size, output_dim: size of vector space in which word is embedded, input_length: sentence size)
-#model.add(BatchNormalization())
-model.add(LSTM(32,return_sequences=True))
-#model.add(BatchNormalization())
+model.add(LSTM(64,return_sequences=True))
 # lstm output is 32
-model.add(Dropout(0.5))
+model.add(Dropout(0.6))
+#model.add(LSTM(32,return_sequences=True))
+# lstm output is 32
+#model.add(Dropout(0.5))
 #model.add(LSTM(64,return_sequences=True))
 # lstm output is 32
 #model.add(Dropout(0.5))
-model.add(Conv1D(32, 5,activation='relu'))
+model.add(Conv1D(32, 6,activation='relu'))
 model.add(MaxPooling1D(pool_size=5))
-#model.add(BatchNormalization())
 #model.add(Dense(1200, activation='relu',W_constraint=maxnorm(1)))
 model.add(Dropout(0.5))
 
 model.add(Flatten())
-#model.add(Dense(64, activation='relu',W_constraint=maxnorm(1)))
-#model.add(BatchNormalization())
+model.add(Dense(32, activation='relu',W_constraint=maxnorm(1)))
 
-#model.add(Dropout(0.5))
+
+# model.add(Dropout(0.5))
  #output layer
 model.add(Dense(5, activation='softmax'))
+
+
+earlyStopping = EarlyStopping(monitor='val_loss',
+                              min_delta=0,
+                              patience=2,
+                              verbose=0, mode='auto')
 
 Nadam = keras.optimizers.Nadam(lr=0.002, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
 model.compile(loss='categorical_crossentropy', optimizer=Nadam, metrics=['accuracy'])
@@ -123,13 +125,14 @@ model.summary()
 
 
 epochs=20
-batch_size=32
+batch_size=64
+#model.fit(trainX_encodedPadded_words, trainY, epochs = epochs, batch_size=batch_size, verbose=2)
 model.fit(trainX_encodedPadded_words, trainY, epochs = epochs, batch_size=batch_size, verbose=2, 
 shuffle = True, validation_data=(validationX_encodedPadded_words, validationY), callbacks=[earlyStopping])
-#model.fit(trainX_encodedPadded_words, trainY, epochs = epochs, batch_size=batch_size, verbose=1)
 
 
-f = open('Submission_LSTM_CNN_GPU.csv', 'w')
+
+f = open('Submission_LSTM_CNN_Validation_GPU.csv', 'w')
 f.write('PhraseId,Sentiment\n')
 
 

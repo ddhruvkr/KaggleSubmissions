@@ -14,7 +14,9 @@ from keras.layers.core import Dense, Activation,Dropout ,Flatten
 from keras.layers.recurrent import LSTM
 from keras.constraints import maxnorm
 import keras
+from keras.callbacks import ModelCheckpoint,TensorBoard, ReduceLROnPlateau,EarlyStopping
 
+print ("correct version")
 
 data = pd.read_csv('./train.tsv', sep='\t', header=0)
 trainX = np.array(list(data['Phrase']))
@@ -26,6 +28,13 @@ for x in trainX:
         length=len(x)
 #print(length)
 
+validation_count=30000
+
+validationY = trainY[:validation_count]
+validationX = trainX[:validation_count]
+
+trainX = trainX[validation_count:]
+trainY = trainY[validation_count:]
 
 data = pd.read_csv('./test.tsv', sep='\t', header=0)
 testX=np.array(list(data['Phrase']))
@@ -49,34 +58,45 @@ print ("Vocab size",tokenizer_vocab_size)
 # 
 encoded_words_train = tokenizer.texts_to_sequences(trainX)
 encoded_words_test = tokenizer.texts_to_sequences(testX)
+encoded_words_validation = tokenizer.texts_to_sequences(validationX)
+
 #print(encoded_words_test)
 
 
 
-maxWordCount=60
+maxWordCount=64
 
 #padding all text to same size
 trainX_encodedPadded_words = sequence.pad_sequences(encoded_words_train, maxlen=maxWordCount)
 testX_encodedPadded_words = sequence.pad_sequences(encoded_words_test, maxlen=maxWordCount)
+validationX_encodedPadded_words = sequence.pad_sequences(encoded_words_validation, maxlen=maxWordCount)
 
 # One Hot Encoding
 trainY = to_categorical(trainY, 5)
+validationY = to_categorical(validationY, 5)
 
-
+earlyStopping = EarlyStopping(monitor='val_acc',
+                              min_delta=0,
+                              patience=1,
+                              verbose=0, mode='auto')
 
 
 model = Sequential()
-output_dim = 16
+output_dim = 32
 model.add(Embedding(tokenizer_vocab_size, output_dim, input_length = maxWordCount))
 # embedding paramenter (input_size: vocab size, output_dim: size of vector space in which word is embedded, input_length: sentence size)
 model.add(LSTM(32, return_sequences=True))
 # lstm output is 32
 model.add(Dropout(0.6))
+
+model.add(LSTM(32, return_sequences=True))
+# lstm output is 32
+model.add(Dropout(0.6))
 #model.add(Dense(1200, activation='relu',W_constraint=maxnorm(1)))
-# model.add(Dropout(0.6))
+#model.add(Dropout(0.6))
 #model.add(Dense(32, activation='relu',W_constraint=maxnorm(1)))
 
-# model.add(Dropout(0.5))
+#model.add(Dropout(0.5))
  #output layer
 
 model.add(Flatten())
@@ -89,12 +109,13 @@ model.compile(loss='categorical_crossentropy', optimizer=Nadam, metrics=['accura
 model.summary()
 
 
-epochs=10
+epochs=20
 batch_size=32
-model.fit(trainX_encodedPadded_words, trainY, epochs = epochs, batch_size=batch_size, verbose=1)
+model.fit(trainX_encodedPadded_words, trainY, epochs = epochs, batch_size=batch_size, verbose=2, 
+shuffle = True, validation_data=(validationX_encodedPadded_words, validationY), callbacks=[earlyStopping])
 
 
-f = open('Submission.csv', 'w')
+f = open('Submission_LSTM_Validation_1.csv', 'w')
 f.write('PhraseId,Sentiment\n')
 
 
