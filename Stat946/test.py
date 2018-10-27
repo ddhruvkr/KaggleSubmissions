@@ -1,8 +1,3 @@
-class cifar100vgg:
-
-	def __init__(self):
-        self.predict()
-
 def predict(model,test_data,normalize=True):
     '''if normalize:
         x = self.normalize_production(x)'''
