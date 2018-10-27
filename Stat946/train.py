@@ -1,5 +1,5 @@
 import models
-from inputs import get_processed_data
+from inputs import get_processed_data, get_validation_data
 from test import predict
 
 import keras
@@ -9,13 +9,14 @@ from keras import optimizers
 def train(model, x_train, y_train, x_test):
 
     # training parameters
-    batch_size = 128
-    maxepoches = 2
+    batch_size = 256
+    maxepoches = 1
 
-    learning_rate = 0.1
+    learning_rate = 0.01
     lr_decay = 1e-6
     lr_drop = 20
 
+    x_train, x_validation, y_train, y_validation = get_validation_data(x_train, y_train)
     def lr_scheduler(epoch):
         return learning_rate * (0.5 ** (epoch // lr_drop))
 
@@ -34,7 +35,7 @@ def train(model, x_train, y_train, x_test):
         horizontal_flip=True,  # randomly flip images
         vertical_flip=False)  # randomly flip images
     # (std, mean, and principal components if ZCA whitening is applied).
-    # datagen.fit(x_train)
+    datagen.fit(x_train)
 
     # optimization details
 
@@ -49,8 +50,10 @@ def train(model, x_train, y_train, x_test):
                         steps_per_epoch=x_train.shape[0] // batch_size,
                         epochs=maxepoches,
                         validation_data=(x_test, y_test),callbacks=[reduce_lr],verbose=2)'''
-    historytemp = model.fit(x_train, y_train, batch_size=batch_size, epochs=1)
-
+    #historytemp = model.fit(x_train, y_train, batch_size=batch_size, validation_data=(x_validation, y_validation), epochs=1)
+    historytemp = model.fit_generator(datagen.flow(x_train, y_train, 
+        batch_size=batch_size), steps_per_epoch = x_train.shape[0], 
+        validation_data=(x_validation, y_validation), callbacks=[reduce_lr], epochs=maxepoches)
     # model.save_weights('cifar100vgg.h5')
     return model
 
@@ -62,7 +65,6 @@ if __name__ == '__main__':
     train_data, train_label, test_data = get_data()
     train_data = train_data.astype('float32')
     test_data = test_data.astype('float32')
-
     model = models.cifar100vgg().model
     train(model, train_data, train_label, test_data)
 
