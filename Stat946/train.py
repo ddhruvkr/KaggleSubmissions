@@ -9,10 +9,10 @@ from keras import optimizers
 def train(model, x_train, y_train, x_test):
 
     # training parameters
-    batch_size = 256
+    batch_size = 128
     maxepoches = 1
 
-    learning_rate = 0.01
+    learning_rate = 0.0001
     lr_decay = 1e-6
     lr_drop = 20
 
@@ -35,7 +35,7 @@ def train(model, x_train, y_train, x_test):
         horizontal_flip=True,  # randomly flip images
         vertical_flip=False)  # randomly flip images
     # (std, mean, and principal components if ZCA whitening is applied).
-    datagen.fit(x_train)
+    #datagen.fit(x_train)
 
     # optimization details
 
@@ -50,10 +50,10 @@ def train(model, x_train, y_train, x_test):
                         steps_per_epoch=x_train.shape[0] // batch_size,
                         epochs=maxepoches,
                         validation_data=(x_test, y_test),callbacks=[reduce_lr],verbose=2)'''
-    #historytemp = model.fit(x_train, y_train, batch_size=batch_size, validation_data=(x_validation, y_validation), epochs=1)
-    historytemp = model.fit_generator(datagen.flow(x_train, y_train, 
+    historytemp = model.fit(x_train, y_train, batch_size=batch_size, validation_data=(x_validation, y_validation), epochs=1, verbose=1)
+    '''historytemp = model.fit_generator(datagen.flow(x_train, y_train, 
         batch_size=batch_size), steps_per_epoch = x_train.shape[0], 
-        validation_data=(x_validation, y_validation), callbacks=[reduce_lr], epochs=maxepoches)
+        validation_data=(x_validation, y_validation), callbacks=[reduce_lr], epochs=maxepoches)'''
     # model.save_weights('cifar100vgg.h5')
     return model
 
