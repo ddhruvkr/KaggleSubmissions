@@ -1,6 +1,9 @@
 import pickle
 import keras
 from sklearn.cross_validation import train_test_split
+import scipy
+from scipy import misc
+import numpy as np
 
 def get_inputs():
 	with open('./data/train_data', 'rb') as f:
@@ -19,6 +22,11 @@ def get_processed_data():
 	train_label = keras.utils.to_categorical(train_label, num_classes)
 	return train_data, train_label, test_data
 
+def upscale_images(train_data, test_data, size):
+	train_data = np.array([scipy.misc.imresize(train_data[i], (size, size, 3)) for i in range(0, len(train_data))]).astype('float32')
+	test_data = np.array([scipy.misc.imresize(test_data[i], (size, size, 3)) for i in range(0, len(test_data))]).astype('float32')
+	print(test_data.shape)
+	return train_data, test_data
 
-def get_validation_data(train_data, train_label, split_ratio=0.2):
+def get_validation_data(train_data, train_label, split_ratio=0.1):
 	return train_test_split(train_data, train_label, test_size = split_ratio, random_state = 0) 
