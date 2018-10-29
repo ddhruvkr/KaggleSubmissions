@@ -222,6 +222,33 @@ class VGG16Keras:
         model.summary()
         return model
 
+class VGG16Keras_fast:
+    def __init__(self, train=True):
+        self.num_classes = 100
+        self.weight_decay = 0.0005
+        self.x_shape = [48, 48, 3]
+        self.model = self.build_model()
+        self.base_model = self.build_base_model()
+
+    def build_base_model(self):
+        # Build the network of vgg for 10 classes with massive dropout and weight decay as described in the paper.
+        base_model = VGG16(#weights='imagenet',
+        weights = 'imagenet', include_top=False, input_shape=self.x_shape)
+        print ('base model summary')
+        base_model.summary()
+        return base_model
+
+    def build_model(self):
+        model = Sequential()
+        model.add(GlobalAveragePooling2D(input_shape=[1,1,512]))
+        model.add(Dropout(0.4))
+        model.add(Dense(1024, activation='relu'))
+        model.add(BatchNormalization())
+        model.add(Dropout(0.5))
+        model.add(Dense(self.num_classes, activation='softmax'))
+        print('model simmary')
+        model.summary()
+        return model
 
 class InceptionV3Keras:
     def __init__(self, train=True):
