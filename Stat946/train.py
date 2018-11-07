@@ -88,7 +88,7 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment):
             featurewise_std_normalization=False,  # divide inputs by std of the dataset
             samplewise_std_normalization=False,  # divide each input by its std
             zca_whitening=False,  # apply ZCA whitening
-            rotation_range=40,  # randomly rotate images in the range (degrees, 0 to 180)
+            rotation_range=20,  # randomly rotate images in the range (degrees, 0 to 180)
             width_shift_range=0.2,  # randomly shift images horizontally (fraction of total width)
             height_shift_range=0.2,  # randomly shift images vertically (fraction of total height)
             horizontal_flip=True, # randomly flip images
@@ -108,8 +108,8 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment):
 
         predict_size_train = int(math.ceil(x_train.shape[0] / batch_size))
 
-        if os.path.isfile("Resnet50_224_features_train_augmented.npz"):
-            train_features = np.load('Resnet50_224_features_train_augmented.npz')
+        if os.path.isfile("Resnet50_100_features_train.npz"):
+            train_features = np.load('Resnet50_100_features_train.npz')
             print("loaded train features")
             #print(train_features['features'])
             #print(train_features.shape)
@@ -117,8 +117,8 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment):
         else:
             train_features = base_model.predict_generator(generator, steps=predict_size_train, verbose=1)
             #Saving the bottleneck features
-            np.savez('Resnet50_224_features_train_augmented', features=train_features)
-            train_features = np.load('Resnet50_224_features_train_augmented.npz')
+            np.savez('Resnet50_100_features_train', features=train_features)
+            train_features = np.load('Resnet50_100_features_train.npz')
             # (std, mean, and principal components if ZCA whitening is applied).
             #datagen.fit(x_train)
 
@@ -150,8 +150,8 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment):
         #Creating bottleneck features for the testing data
 
 
-        if os.path.isfile("DenseNet121_224_features_train.npz"):
-            train_features = np.load('DenseNet121_224_features_train.npz')
+        if os.path.isfile("Resnet50_100_features_train.npz"):
+            train_features = np.load('Resnet50_100_features_train.npz')
             print("loaded train features")
             #print(train_features['features'])
             #print(train_features.shape)
@@ -159,21 +159,21 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment):
         else:
             train_features = base_model.predict(x_train, verbose=1)
             #Saving the bottleneck features
-            np.savez('DenseNet121_224_features_train', features=train_features)
-            train_features = np.load('DenseNet121_224_features_train.npz')
+            np.savez('Resnet50_100_features_train', features=train_features)
+            train_features = np.load('Resnet50_100_features_train.npz')
         
-    if os.path.isfile("DenseNet121_224_features_test.npz"):
-        test_features = np.load('DenseNet121_224_features_test.npz')
+    if os.path.isfile("Resnet50_100_features_test.npz"):
+        test_features = np.load('Resnet50_100_features_test.npz')
         print("loaded test features")
         #print(test_features.shape)
     else:
         test_features = base_model.predict(x_test, verbose=1)
         #Saving the bottleneck features
-        np.savez('DenseNet121_224_features_test', features=test_features)
-        test_features = np.load('DenseNet121_224_features_test.npz')
+        np.savez('Resnet50_100_features_test', features=test_features)
+        test_features = np.load('Resnet50_100_features_test.npz')
 
     #try for val_loss
-    checkpointer = ModelCheckpoint(filepath='DenseNet121_224_keras_fast_checkpoint_acc.h5', 
+    checkpointer = ModelCheckpoint(filepath='Resnet50_100_keras_fast_checkpoint_acc.h5', 
         monitor='val_acc', verbose=1, save_best_only=True)
     '''if os.path.isfile("vgg16_features_validation_vals.npz"):
         validation_features = data = np.load('vgg16_features_validation_vals.npz')
@@ -209,7 +209,7 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment):
         batch_size=batch_size), steps_per_epoch = x_train.shape[0], 
         validation_data=(x_validation, y_validation), callbacks=[reduce_lr], epochs=maxepoches)'''
     #model.save_weights('resnet50keras_fast.h5')
-    model.load_weights("DenseNet121_224_keras_fast_checkpoint_acc.h5")
+    model.load_weights("Resnet50_100_keras_fast_checkpoint_acc.h5")
     predict_fast(model, x_test, test_features['features'])
     print('prediction done')
     #Creating bottleneck features for the testing data
@@ -268,7 +268,7 @@ def get_data():
 
 if __name__ == '__main__':
 
-    size = 32
+    size = 100
     train_data, train_label, test_data = get_data()
     train_data = train_data.astype('float32')
     test_data = test_data.astype('float32')
@@ -283,14 +283,14 @@ if __name__ == '__main__':
     #model = models.InceptionV3Keras().model
     #model = models.VGG16Keras().model
 
-    obj = models.ResNet50Keras_fast_unfrozen()
+    '''obj = models.ResNet50Keras_fast_unfrozen()
     model = obj.model
-    different_train_unfrozen(model, train_data, train_label, test_data)
+    different_train_unfrozen(model, train_data, train_label, test_data)'''
 
-    '''obj = models.ResNet50Keras_fast()
+    obj = models.ResNet50Keras_fast()
     model = obj.model
     base_model = obj.base_model
-    different_train(model, base_model, train_data, train_label, test_data, True)'''
+    different_train(model, base_model, train_data, train_label, test_data, False)
  
     '''obj = models.DenseNet121Keras_fast()
     model = obj.model
