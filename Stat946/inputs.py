@@ -1,6 +1,5 @@
 import pickle
 import keras
-from sklearn.cross_validation import train_test_split
 import scipy
 from scipy import misc
 import numpy as np
@@ -34,6 +33,3 @@ def upscale_images(train_data, test_data, size):
 	preprocess_input(train_data)
 	preprocess_input(test_data)
 	return train_data, test_data
-
-def get_validation_data(train_data, train_label, split_ratio=0.1):
-	return train_test_split(train_data, train_label, test_size = split_ratio, random_state = 0) 

@@ -1,5 +1,5 @@
 import models
-from inputs import get_processed_data, get_validation_data, upscale_images
+from inputs import get_processed_data, upscale_images
 from test import predict, predict_fast, predict_fast_unfrozen, save_results, load_predict_save, predict_fast_for_Model
 import numpy as np
 import os.path
@@ -20,7 +20,7 @@ def train(model, x_train, y_train, x_test):
     lr_decay = 1e-6
     lr_drop = 15
 
-    x_train, x_validation, y_train, y_validation = get_validation_data(x_train, y_train)
+    #x_train, x_validation, y_train, y_validation = get_validation_data(x_train, y_train)
     def lr_scheduler(epoch):
         return learning_rate * (0.5 ** (epoch // lr_drop))
 
@@ -232,7 +232,7 @@ def different_train_unfrozen(model, x_train, y_train, x_test):
     lr_decay = 1e-6
     lr_drop = 30
 
-    x_train, x_validation, y_train, y_validation = get_validation_data(x_train, y_train)
+    #x_train, x_validation, y_train, y_validation = get_validation_data(x_train, y_train)
     def lr_scheduler(epoch):
         return learning_rate * (0.5 ** (epoch // lr_drop))
 
