@@ -5,13 +5,15 @@ import scipy
 from scipy import misc
 import numpy as np
 from keras.applications.vgg16 import preprocess_input
+from keras.datasets import cifar100
 
 def get_inputs():
-	with open('./data/train_data', 'rb') as f:
+	(train_data, train_label), (test_data, y_test) = cifar100.load_data(label_mode='fine')
+	'''with open('./data/train_data', 'rb') as f:
 	    train_data = pickle.load(f)
 	    train_label= pickle.load(f)
 	with open('./data/test_data', 'rb') as f:
-	    test_data = pickle.load(f)
+	    test_data = pickle.load(f)'''
 
 	return train_data, train_label, test_data
 
