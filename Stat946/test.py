@@ -69,12 +69,12 @@ def predict_fast_unfrozen(model,test_data,normalize=True):
         x = self.normalize_production(x)'''
     predictions = model.predict_classes(test_data, verbose=1)
     get_accuracy(model)
-    '''
-    f = open('Submission_aisehi.csv', 'w')
+    
+    f = open('Submission_Resnet50_32_acc_unfrozen.csv', 'w')
     f.write('ids,labels\n')
 
     for i in range(0, test_data.shape[0]):
         f.write(str(i)+","+str(predictions[i])+'\n')
 
-    f.close()'''
+    f.close()
     
