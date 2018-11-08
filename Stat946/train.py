@@ -239,7 +239,7 @@ def different_train_unfrozen(model, x_train, y_train, x_test):
 
     reduce_lr = keras.callbacks.LearningRateScheduler(lr_scheduler)
 
-    checkpointer = ModelCheckpoint(filepath='Resnet50_32_keras_fast_checkpoint_acc_unfrozen.h5', 
+    checkpointer = ModelCheckpoint(filepath='Resnet50_224_keras_fast_checkpoint_acc_unfrozen.h5', 
         monitor='val_acc', verbose=1, save_best_only=True)
     # maybe move optimizer and loss part to the models section?
     # optimization details
@@ -254,7 +254,7 @@ def different_train_unfrozen(model, x_train, y_train, x_test):
     '''historytemp = model.fit_generator(datagen.flow(x_train, y_train, 
         batch_size=batch_size), steps_per_epoch = x_train.shape[0], 
         validation_data=(x_validation, y_validation), callbacks=[reduce_lr], epochs=maxepoches)'''
-    model.load_weights("Resnet50_32_keras_fast_checkpoint_acc_unfrozen.h5")
+    model.load_weights("Resnet50_224_keras_fast_checkpoint_acc_unfrozen.h5")
     predict_fast_unfrozen(model, x_test)
     print('prediction done')
     #Creating bottleneck features for the testing data
@@ -290,8 +290,8 @@ if __name__ == '__main__':
     model = obj.model
     base_model = obj.base_model
     top_model = obj.top_model
-    #different_train_unfrozen(model, train_data, train_label, test_data)
-    different_train(top_model, base_model, train_data, train_label, test_data, False)
+    different_train_unfrozen(model, train_data, train_label, test_data)
+    #different_train(top_model, base_model, train_data, train_label, test_data, False)
     '''obj = models.ResNet50Keras_fast()
     model = obj.model
     base_model = obj.base_model

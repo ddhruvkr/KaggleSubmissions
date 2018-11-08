@@ -70,7 +70,7 @@ def predict_fast_unfrozen(model,test_data,normalize=True):
     predictions = model.predict_classes(test_data, verbose=1)
     get_accuracy(model)
     
-    f = open('Submission_Resnet50_32_acc_unfrozen.csv', 'w')
+    f = open('Submission_Resnet50_224_acc_unfrozen.csv', 'w')
     f.write('ids,labels\n')
 
     for i in range(0, test_data.shape[0]):

@@ -327,7 +327,7 @@ class ResNet50Keras_fast_unfrozen:
     def __init__(self, train=True):
         self.num_classes = 100
         self.weight_decay = 0.0005
-        self.x_shape = [32, 32, 3]
+        self.x_shape = [224, 224, 3]
         self.model, self.base_model, self.top_model = self.build_model()
 
     def build_model(self):
@@ -354,7 +354,7 @@ class ResNet50Keras_fast_unfrozen:
         top_model.add(Dropout(0.5))
 
         top_model.add(Dense(self.num_classes, activation='softmax'))
-        top_model.load_weights("Resnet50_32_keras_fast_checkpoint_acc1.h5")
+        top_model.load_weights("Resnet50_224_keras_fast_checkpoint_acc.h5")
         print(' top model summary')
         top_model.summary()
 
