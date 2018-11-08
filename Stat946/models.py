@@ -297,7 +297,6 @@ class ResNet50Keras_fast:
         self.x_shape = [224,224, 3]
         self.model = self.build_model()
         self.base_model = self.build_base_model()
-        self.integrated_model = self.build_integrated_model
 
     def build_base_model(self):
         # Build the network of vgg for 10 classes with massive dropout and weight decay as described in the paper.
@@ -324,42 +323,12 @@ class ResNet50Keras_fast:
         model.summary()
         return model
 
-    def build_integrated_model(self):
-        # Build the network of vgg for 10 classes with massive dropout and weight decay as described in the paper.
-        base_model = ResNet50(#weights='imagenet',
-        weights = 'imagenet', include_top=False, input_shape=self.x_shape)
-        print ('base model summary')
-        base_model.summary()
-                                                                                                                                                                                                                                                                                                                                              
-        top_model = Sequential()
-        #model.add(GlobalAveragePooling2D(input_shape=[1,1,512]))
-        top_model.add(GlobalMaxPooling2D(input_shape=[1,1,2048]))                                                                                                        
-        #model.add(Flatten(input_shape=[1,1,512]))
-        top_model.add(Dropout(0.4))
-        top_model.add(Dense(1024, activation='relu'))
-        top_model.add(BatchNormalization())
-        top_model.add(Dropout(0.5))
-        '''model.add(Dense(1024, activation='relu'))
-        model.add(BatchNormalization())
-        model.add(Dropout(0.5))'''
-        top_model.add(Dense(self.num_classes, activation='softmax'))
-        top_model.load_weights("resnet50keras_fast_checkpoint_acc.h5")
-        print(' top model summary')
-        top_model.summary()
-        '''model = Sequential() #new model
-        for layer in base_model.layers: 
-            model.add(layer)
-        model.add(top_model)'''
-        model = Model(inputs= base_model.input, outputs= top_model(base_model.output))
-        model.summary()
-        return model
-
 class ResNet50Keras_fast_unfrozen:
     def __init__(self, train=True):
         self.num_classes = 100
         self.weight_decay = 0.0005
         self.x_shape = [32, 32, 3]
-        self.model = self.build_model()
+        self.model, self.base_model, self.top_model = self.build_model()
 
     def build_model(self):
         # Build the network of vgg for 10 classes with massive dropout and weight decay as described in the paper.
@@ -367,37 +336,14 @@ class ResNet50Keras_fast_unfrozen:
         weights = 'imagenet', include_top=False, input_shape=self.x_shape)
         print ('base model summary')
         base_model.summary()
-
-        mid_start = base_model.get_layer('activation_46')
+        for layer in base_model.layers:
+            layer.trainable = False
+        '''mid_start = base_model.get_layer('activation_46')
         all_layers = base_model.layers
         for i in range(base_model.layers.index(mid_start)):
-            all_layers[i].trainable = False
+            all_layers[i].trainable = False'''
 
-        conv_output = base_model.get_layer("activation_46").output
-        '''intermediate_model = Sequential()
-        intermediate_model.add(base_model.get_layer("activation_40"))'''
-        intermediate_model = Model(base_model.input, conv_output)
-
-        intermediate_model.summary()
-
-        input2 = Input(shape=(1, 1, 2048))
-        x = base_model.get_layer("res5c_branch2a")(input2)
-        x = base_model.get_layer("bn5c_branch2a")(x)
-        x = base_model.get_layer("activation_47")(x)
-        x = base_model.get_layer("res5c_branch2b")(x)
-        x = base_model.get_layer("bn5c_branch2b")(x)
-        x = base_model.get_layer("activation_48")(x)
-        x = base_model.get_layer("res5c_branch2c")(x)
-
-        x = base_model.get_layer("bn5c_branch2c")(x)
-        x = keras.layers.add([x, input2])
-        #x = base_model.get_layer("add_16")(x)
-        x = base_model.get_layer("activation_49")(x)
-        beech_model = Model(input2, x)
-        beech_model.summary()
-        beech_model1 = Model(base_model.input, x)
-        beech_model1.summary()
-        '''
+       
         top_model = Sequential()
         #model.add(GlobalAveragePooling2D(input_shape=[1,1,512]))
         top_model.add(GlobalMaxPooling2D(input_shape=[1,1,2048]))                                                                                                        
@@ -408,23 +354,19 @@ class ResNet50Keras_fast_unfrozen:
         top_model.add(Dropout(0.5))
 
         top_model.add(Dense(self.num_classes, activation='softmax'))
-        top_model.load_weights("Resnet50_224_keras_fast_checkpoint_acc.h5")
+        top_model.load_weights("Resnet50_32_keras_fast_checkpoint_acc1.h5")
         print(' top model summary')
         top_model.summary()
 
 
-        inter_model = Model(inputs = base_model.input, outputs=intermediate_model(base_model.output))
-        model = Model(inputs= inter_model.input, outputs= top_model(intermediate_model.output))
-        model.summary()
-        mid_start = model.get_layer('activation_40')
+        model = Model(inputs = base_model.input, outputs=top_model(base_model.output))
+        '''mid_start = model.get_layer('activation_40')
         all_layers = model.layers
         for i in range(model.layers.index(mid_start)):
-            all_layers[i].trainable = False
-        #for layer in model.layers[:25]:
-        #    layer.trainable = False
-        print('model summary')
-        model.summary()'''
-        return intermediate_model
+            all_layers[i].trainable = False'''
+        print('final model summary')
+        model.summary()
+        return model, base_model, top_model
 
 class VGG16Keras_fast_unfrozen:
     def __init__(self, train=True):
