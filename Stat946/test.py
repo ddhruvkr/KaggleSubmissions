@@ -29,7 +29,7 @@ def predict_fast(model,test_data, test_data_features,normalize=True):
         x = self.normalize_production(x)'''
     predictions = model.predict_classes(test_data_features, verbose=1)
     get_accuracy(model, test_data_features)
-    f = open('Submission_Resnet50_100_acc.csv', 'w')
+    f = open('Submission_Resnet50_224_acc.csv', 'w')
     f.write('ids,labels\n')
 
     for i in range(0, test_data.shape[0]):

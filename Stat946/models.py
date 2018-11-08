@@ -294,7 +294,7 @@ class ResNet50Keras_fast:
     def __init__(self, train=True):
         self.num_classes = 100
         self.weight_decay = 0.0005
-        self.x_shape = [100, 100, 3]
+        self.x_shape = [224,224, 3]
         self.model = self.build_model()
         self.base_model = self.build_base_model()
         self.integrated_model = self.build_integrated_model
@@ -310,7 +310,7 @@ class ResNet50Keras_fast:
     def build_model(self):                                                                                                                                                                                                                                                                                                                                              
         model = Sequential()
         #model.add(GlobalAveragePooling2D(input_shape=[1,1,2048]))
-        model.add(GlobalMaxPooling2D(input_shape=[4,4,2048]))                                                                                                        
+        model.add(GlobalMaxPooling2D(input_shape=[1,1,2048]))                                                                                                        
         #model.add(Flatten(input_shape=[1,1,2048]))
         model.add(Dropout(0.4))
         model.add(Dense(1024, activation='relu'))

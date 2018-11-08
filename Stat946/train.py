@@ -66,7 +66,7 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment):
 
     # training parameters
     batch_size = 128
-    maxepoches = 150
+    maxepoches = 250
 
     learning_rate = 0.1
     lr_decay = 1e-6
@@ -150,8 +150,8 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment):
         #Creating bottleneck features for the testing data
 
 
-        if os.path.isfile("Resnet50_100_features_train.npz"):
-            train_features = np.load('Resnet50_100_features_train.npz')
+        if os.path.isfile("Resnet50_224_features_train.npz"):
+            train_features = np.load('Resnet50_224_features_train.npz')
             print("loaded train features")
             #print(train_features['features'])
             #print(train_features.shape)
@@ -159,21 +159,21 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment):
         else:
             train_features = base_model.predict(x_train, verbose=1)
             #Saving the bottleneck features
-            np.savez('Resnet50_100_features_train', features=train_features)
-            train_features = np.load('Resnet50_100_features_train.npz')
+            #np.savez('Resnet50_224_features_train', features=train_features)
+            #train_features = np.load('Resnet50_224_features_train.npz')
         
-    if os.path.isfile("Resnet50_100_features_test.npz"):
-        test_features = np.load('Resnet50_100_features_test.npz')
+    if os.path.isfile("Resnet50_224_features_test.npz"):
+        test_features = np.load('Resnet50_224_features_test.npz')
         print("loaded test features")
         #print(test_features.shape)
     else:
         test_features = base_model.predict(x_test, verbose=1)
         #Saving the bottleneck features
-        np.savez('Resnet50_100_features_test', features=test_features)
-        test_features = np.load('Resnet50_100_features_test.npz')
+        #np.savez('Resnet50_224_features_test', features=test_features)
+        #test_features = np.load('Resnet50_224_features_test.npz')
 
     #try for val_loss
-    checkpointer = ModelCheckpoint(filepath='Resnet50_100_keras_fast_checkpoint_acc.h5', 
+    checkpointer = ModelCheckpoint(filepath='Resnet50_224_keras_fast_checkpoint_acc.h5', 
         monitor='val_acc', verbose=1, save_best_only=True)
     '''if os.path.isfile("vgg16_features_validation_vals.npz"):
         validation_features = data = np.load('vgg16_features_validation_vals.npz')
@@ -209,7 +209,7 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment):
         batch_size=batch_size), steps_per_epoch = x_train.shape[0], 
         validation_data=(x_validation, y_validation), callbacks=[reduce_lr], epochs=maxepoches)'''
     #model.save_weights('resnet50keras_fast.h5')
-    model.load_weights("Resnet50_100_keras_fast_checkpoint_acc.h5")
+    model.load_weights("Resnet50_224_keras_fast_checkpoint_acc.h5")
     predict_fast(model, x_test, test_features['features'])
     print('prediction done')
     #Creating bottleneck features for the testing data
@@ -268,7 +268,7 @@ def get_data():
 
 if __name__ == '__main__':
 
-    size = 100
+    size = 224
     train_data, train_label, test_data = get_data()
     train_data = train_data.astype('float32')
     test_data = test_data.astype('float32')
