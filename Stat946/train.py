@@ -172,7 +172,7 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
         #test_features = np.load('Resnet50_224_features_test.npz')
 
     #try for val_loss
-    checkpointer = ModelCheckpoint(filepath='Resnet50_224_keras_fast_checkpoint_acc_finalh5', 
+    checkpointer = ModelCheckpoint(filepath='Resnet50_224_keras_fast_checkpoint_acc_final.h5', 
         monitor='val_acc', verbose=1, save_best_only=True)
     '''if os.path.isfile("vgg16_features_validation_vals.npz"):
         validation_features = data = np.load('vgg16_features_validation_vals.npz')
@@ -293,11 +293,11 @@ if __name__ == '__main__':
     train(model, train_data, train_label, test_data)'''
 
 
-    '''obj = models.ResNet50Keras_fast_unfrozen()
+    obj = models.ResNet50Keras_fast_unfrozen()
     model = obj.model
     base_model = obj.base_model
     top_model = obj.top_model
-    model = different_train_unfrozen(model, train_data, train_label, test_data, 0.001, 5)'''
+    model = different_train_unfrozen(model, train_data, train_label, test_data, 0.001, 50)
 
     '''for layer in model.layers:
         layer.trainable = True
@@ -315,10 +315,10 @@ if __name__ == '__main__':
 
 
     #different_train(top_model, base_model, train_data, train_label, test_data, False)
-    obj = models.ResNet50Keras_fast()
+    ''' obj = models.ResNet50Keras_fast()
     model = obj.model
     base_model = obj.base_model
-    different_train(model, base_model, train_data, train_label, test_data, False, 0.1, 200)
+    different_train(model, base_model, train_data, train_label, test_data, False, 0.1, 200)'''
  
     '''obj = models.DenseNet121Keras_fast()
     model = obj.model
@@ -329,7 +329,7 @@ if __name__ == '__main__':
     #train(model, train_data, train_label, test_data)
 
     #predict(model, test_data)
-'''
+    '''
     integrated_model = obj.integrated_model
     test_features = data = np.load('ResNet50_features_test.npz')
     sgd = optimizers.SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
