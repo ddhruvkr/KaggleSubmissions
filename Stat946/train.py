@@ -315,7 +315,7 @@ if __name__ == '__main__':
 
 
     #different_train(top_model, base_model, train_data, train_label, test_data, False)
-    ''' obj = models.ResNet50Keras_fast()
+    '''obj = models.ResNet50Keras_fast()
     model = obj.model
     base_model = obj.base_model
     different_train(model, base_model, train_data, train_label, test_data, False, 0.1, 200)'''

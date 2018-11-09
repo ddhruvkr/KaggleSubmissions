@@ -336,7 +336,7 @@ class ResNet50Keras_fast_unfrozen:
         weights = 'imagenet', include_top=False, input_shape=self.x_shape)
         #print ('base model summary')
         #base_model.summary()
-       ''' for layer in base_model.layers:
+        '''for layer in base_model.layers:
             layer.trainable = False'''
         '''mid_start = base_model.get_layer('activation_46')
         all_layers = base_model.layers
