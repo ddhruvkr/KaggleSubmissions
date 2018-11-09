@@ -250,7 +250,10 @@ def different_train_unfrozen(model, x_train, y_train, x_test, learning_rate, max
 
 
     #put validation features too
-    historytemp = model.fit(x_train, y_train, validation_data=(x_test, y_test), batch_size=batch_size, epochs=maxepoches, verbose=1, callbacks=[reduce_lr, checkpointer])
+    historytemp = model.fit(x_train, y_train, validation_split=0.1, shuffle=True, batch_size=batch_size, 
+        epochs=maxepoches, verbose=1, callbacks=[reduce_lr, checkpointer])
+    
+    #historytemp = model.fit(x_train, y_train, validation_data=(x_test, y_test), batch_size=batch_size, epochs=maxepoches, verbose=1, callbacks=[reduce_lr, checkpointer])
     '''historytemp = model.fit_generator(datagen.flow(x_train, y_train, 
         batch_size=batch_size), steps_per_epoch = x_train.shape[0], 
         validation_data=(x_validation, y_validation), callbacks=[reduce_lr], epochs=maxepoches)'''

@@ -346,7 +346,7 @@ class ResNet50Keras_fast_unfrozen:
        
         top_model = Sequential()
         #model.add(GlobalAveragePooling2D(input_shape=[1,1,512]))
-        top_model.add(GlobalMaxPooling2D(input_shape=[1,1,2048]))                                                                                                        
+        top_model.add(GlobalMaxPooling2D(input_shape=[7,7,2048]))                                                                                                        
         #model.add(Flatten(input_shape=[1,1,512]))
         top_model.add(Dropout(0.4))
         top_model.add(Dense(1024, activation='relu'))
