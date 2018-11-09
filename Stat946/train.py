@@ -274,7 +274,7 @@ def different_train_unfrozen(model, x_train, y_train, x_test, learning_rate, max
         batch_size=batch_size), steps_per_epoch = x_train.shape[0], 
         validation_data=(x_validation, y_validation), callbacks=[reduce_lr], epochs=maxepoches)'''
     model.load_weights("Resnet50_224_keras_fast_checkpoint_acc_unfrozen.h5")
-    predict_fast_unfrozen(model, x_test)
+    predict_for_Model(model, x_test)
     print('prediction done')
     #Creating bottleneck features for the testing data
     #test_features = base_model.predict(x_test)
@@ -317,7 +317,7 @@ if __name__ == '__main__':
     different_train_unfrozen(model, train_data, train_label, test_data, 0.1, 1)
 
     model.load_weights("Resnet50_224_keras_fast_checkpoint_acc_unfrozen.h5")
-    predict_fast_unfrozen(model, x_test)
+    predict_for_Model(model, x_test)
     print('prediction done')
     for layer in model.layers:
         layer.trainable = True
