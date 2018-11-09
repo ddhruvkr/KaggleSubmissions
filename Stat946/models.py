@@ -354,7 +354,7 @@ class ResNet50Keras_fast_unfrozen:
         top_model.add(Dropout(0.5))
 
         top_model.add(Dense(self.num_classes, activation='softmax'))
-        top_model.load_weights("Resnet50_224_keras_fast_checkpoint_acc.h5")
+        #top_model.load_weights("Resnet50_224_keras_fast_checkpoint_acc.h5")
         print(' top model summary')
         top_model.summary()
 
