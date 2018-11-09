@@ -295,6 +295,7 @@ if __name__ == '__main__':
 
     obj = models.ResNet50Keras_fast_unfrozen()
     model = obj.model
+    predict(model, test_data)
     base_model = obj.base_model
     top_model = obj.top_model
     model = different_train_unfrozen(model, train_data, train_label, test_data, 0.1, 150)
