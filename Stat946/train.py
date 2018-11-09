@@ -250,10 +250,10 @@ def different_train_unfrozen(model, x_train, y_train, x_test, learning_rate, max
 
 
     #put validation features too
-    historytemp = model.fit(x_train, y_train, validation_split=0.1, shuffle=True, batch_size=batch_size, 
-        epochs=maxepoches, verbose=1, callbacks=[reduce_lr, checkpointer])
+    '''historytemp = model.fit(x_train, y_train, validation_split=0.1, shuffle=True, batch_size=batch_size, 
+        epochs=maxepoches, verbose=1, callbacks=[reduce_lr, checkpointer])'''
     
-    #historytemp = model.fit(x_train, y_train, validation_data=(x_test, y_test), batch_size=batch_size, epochs=maxepoches, verbose=1, callbacks=[reduce_lr, checkpointer])
+    historytemp = model.fit(x_train, y_train, validation_data=(x_test, y_test), batch_size=batch_size, epochs=maxepoches, verbose=1, callbacks=[reduce_lr, checkpointer])
     '''historytemp = model.fit_generator(datagen.flow(x_train, y_train, 
         batch_size=batch_size), steps_per_epoch = x_train.shape[0], 
         validation_data=(x_validation, y_validation), callbacks=[reduce_lr], epochs=maxepoches)'''
@@ -297,9 +297,9 @@ if __name__ == '__main__':
     model = obj.model
     base_model = obj.base_model
     top_model = obj.top_model
-    model = different_train_unfrozen(model, train_data, train_label, test_data, 0.1, 5)
+    model = different_train_unfrozen(model, train_data, train_label, test_data, 0.001, 5)
 
-    for layer in model.layers:
+    '''for layer in model.layers:
         layer.trainable = True
     mid_start = model.get_layer('activation_40')
     all_layers = model.layers
@@ -308,7 +308,7 @@ if __name__ == '__main__':
 
     model.summary()
 
-    different_train_unfrozen(model, train_data, train_label, test_data, 0.001, 5)
+    different_train_unfrozen(model, train_data, train_label, test_data, 0.001, 5)'''
 
 
 

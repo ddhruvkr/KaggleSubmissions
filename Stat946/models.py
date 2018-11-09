@@ -344,7 +344,7 @@ class ResNet50Keras_fast_unfrozen:
             all_layers[i].trainable = False'''
 
        
-        '''top_model = Sequential()
+        top_model = Sequential()
         #model.add(GlobalAveragePooling2D(input_shape=[1,1,512]))
         top_model.add(GlobalMaxPooling2D(input_shape=[1,9,2048]))                                                                                                        
         #model.add(Flatten(input_shape=[1,1,512]))
@@ -354,14 +354,14 @@ class ResNet50Keras_fast_unfrozen:
         top_model.add(Dropout(0.5))
 
         top_model.add(Dense(self.num_classes, activation='softmax'))
-        #top_model.load_weights("Resnet50_224_keras_fast_checkpoint_acc.h5")
+        top_model.load_weights("Resnet50_224_keras_fast_checkpoint_acc.h5")
         print(' top model summary')
         top_model.summary()
 
 
-        model = Model(inputs = base_model.input, outputs=top_model(base_model.output))'''
+        model = Model(inputs = base_model.input, outputs=top_model(base_model.output))
 
-        top_model = base_model
+        '''top_model = base_model
 
         x = base_model.output
         x = GlobalMaxPooling2D()(x)
@@ -374,7 +374,7 @@ class ResNet50Keras_fast_unfrozen:
         predictions = Dense(self.num_classes, activation='softmax')(x)
 
         # This is the model we will train
-        model = Model(inputs=base_model.input, outputs=predictions)
+        model = Model(inputs=base_model.input, outputs=predictions)'''
         '''mid_start = model.get_layer('activation_40')
         all_layers = model.layers
         for i in range(model.layers.index(mid_start)):
