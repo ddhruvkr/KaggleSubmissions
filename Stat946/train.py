@@ -170,6 +170,22 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
         #Saving the bottleneck features
         #np.savez('Resnet50_224_features_test', features=test_features)
         #test_features = np.load('Resnet50_224_features_test.npz')
+    print("from bottleneck features")
+    predict_fast(model, x_test, test_features['features'])
+
+    '''check that is npz files created are different for different day'''
+    #the two predicted values from pre calculated bottleneck features and the new bottleneck features
+    #should be equal, cannot do this calculation here since gpu has issues with npz
+    '''if os.path.isfile("delete_this.npz"):
+        test_features = np.load('delete_this.npz')
+        print("loaded delete_this test features")
+        #print(test_features.shape)
+    else:
+        test_features = base_model.predict(x_test, verbose=1)
+    print("from recalculated bottleneck features")
+    predict_fast(model, x_test, test_features['features'])'''
+
+
 
     #try for val_loss
     checkpointer = ModelCheckpoint(filepath='Resnet50.h5', 
@@ -293,12 +309,12 @@ if __name__ == '__main__':
     train(model, train_data, train_label, test_data)'''
 
 
-    '''obj = models.ResNet50Keras_fast_unfrozen()
+    obj = models.ResNet50Keras_fast_unfrozen()
     model = obj.model
-    predict_for_Model(model, test_data)
+    #predict_for_Model(model, test_data)
     base_model = obj.base_model
     top_model = obj.top_model
-    #model = different_train_unfrozen(model, train_data, train_label, test_data, 0.1, 150)'''
+    model = different_train_unfrozen(model, train_data, train_label, test_data, 0.1, 150)
 
     '''for layer in model.layers:
         layer.trainable = True
@@ -316,7 +332,7 @@ if __name__ == '__main__':
 
 
     #different_train(top_model, base_model, train_data, train_label, test_data, False)
-    obj = models.ResNet50Keras_fast()
+    '''obj = models.ResNet50Keras_fast()
     model = obj.model
     base_model = obj.base_model
     different_train(model, base_model, train_data, train_label, test_data, False, 0.1, 150)
@@ -324,7 +340,15 @@ if __name__ == '__main__':
     obj = models.ResNet50Keras_fast_unfrozen()
     model = obj.model
     predict_for_Model(model, test_data)
-    print("The two accuracies should match")
+    print("The two accuracies should match")'''
+
+
+
+
+
+
+
+
 
     '''obj = models.DenseNet121Keras_fast()
     model = obj.model

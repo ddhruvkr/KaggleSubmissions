@@ -302,8 +302,8 @@ class ResNet50Keras_fast:
         # Build the network of vgg for 10 classes with massive dropout and weight decay as described in the paper.
         base_model = ResNet50(#weights='imagenet',
         weights = 'imagenet', include_top=False, input_shape=self.x_shape)
-        print ('base model summary')
-        base_model.summary()
+        #print ('base model summary')
+        #base_model.summary()
         return base_model
 
     def build_model(self):                                                                                                                                                                                                                                                                                                                                              
@@ -319,8 +319,9 @@ class ResNet50Keras_fast:
         model.add(BatchNormalization())
         model.add(Dropout(0.5))'''
         model.add(Dense(self.num_classes, activation='softmax'))
-        print('model simmary')
-        model.summary()
+        model.load_weights("Resnet50.h5")
+        #print('model simmary')
+        #odel.summary()
         return model
 
 class ResNet50Keras_fast_unfrozen:
@@ -345,7 +346,7 @@ class ResNet50Keras_fast_unfrozen:
             all_layers[i].trainable = False'''
 
        
-        top_model = Sequential()
+        '''top_model = Sequential()
         #model.add(GlobalAveragePooling2D(input_shape=[1,1,512]))
         top_model.add(GlobalMaxPooling2D(input_shape=[None,None,2048]))                                                                                                        
         #model.add(Flatten(input_shape=[1,1,512]))
@@ -359,9 +360,9 @@ class ResNet50Keras_fast_unfrozen:
         #print(' top model summary')
         #top_model.summary()
 
-        model = Model(inputs = base_model.input, outputs=top_model(base_model.output))
+        model = Model(inputs = base_model.input, outputs=top_model(base_model.output))'''
 
-        '''top_model = base_model
+        top_model = base_model
 
         x = base_model.output
         x = GlobalMaxPooling2D()(x)
@@ -374,7 +375,7 @@ class ResNet50Keras_fast_unfrozen:
         predictions = Dense(self.num_classes, activation='softmax')(x)
 
         # This is the model we will train
-        model = Model(inputs=base_model.input, outputs=predictions)'''
+        model = Model(inputs=base_model.input, outputs=predictions)
         '''mid_start = model.get_layer('activation_40')
         all_layers = model.layers
         for i in range(model.layers.index(mid_start)):
