@@ -317,7 +317,7 @@ if __name__ == '__main__':
     different_train_unfrozen(model, train_data, train_label, test_data, 0.1, 1)
 
     model.load_weights("Resnet50_224_keras_fast_checkpoint_acc_unfrozen.h5")
-    predict_for_Model(model, x_test)
+    predict_for_Model(model, test_data)
     print('prediction done')
     for layer in model.layers:
         layer.trainable = True
