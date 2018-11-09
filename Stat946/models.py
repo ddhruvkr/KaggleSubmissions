@@ -338,10 +338,10 @@ class ResNet50Keras_fast_unfrozen:
         #base_model.summary()
         '''for layer in base_model.layers:
             layer.trainable = False'''
-        '''mid_start = base_model.get_layer('activation_46')
+        mid_start = base_model.get_layer('activation_40')
         all_layers = base_model.layers
         for i in range(base_model.layers.index(mid_start)):
-            all_layers[i].trainable = False'''
+            all_layers[i].trainable = False
 
        
         top_model = Sequential()
