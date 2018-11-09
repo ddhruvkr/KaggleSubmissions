@@ -7,12 +7,12 @@ from keras.applications.vgg16 import preprocess_input
 from keras.datasets import cifar100
 
 def get_inputs():
-	(train_data, train_label), (test_data, y_test) = cifar100.load_data(label_mode='fine')
-	'''with open('./data/train_data', 'rb') as f:
+	#(train_data, train_label), (test_data, y_test) = cifar100.load_data(label_mode='fine')
+	with open('./data/train_data', 'rb') as f:
 	    train_data = pickle.load(f)
 	    train_label= pickle.load(f)
 	with open('./data/test_data', 'rb') as f:
-	    test_data = pickle.load(f)'''
+	    test_data = pickle.load(f)
 
 	return train_data, train_label, test_data
 
@@ -30,6 +30,6 @@ def upscale_images(train_data, test_data, size):
 	train_data = np.array([scipy.misc.imresize(train_data[i], (size, size, 3)) for i in range(0, len(train_data))]).astype('float32')
 	test_data = np.array([scipy.misc.imresize(test_data[i], (size, size, 3)) for i in range(0, len(test_data))]).astype('float32')
 	print(test_data.shape)
-	preprocess_input(train_data)
-	preprocess_input(test_data)
+	#preprocess_input(train_data)
+	#preprocess_input(test_data)
 	return train_data, test_data

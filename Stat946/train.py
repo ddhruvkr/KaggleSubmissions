@@ -52,7 +52,7 @@ def train(model, x_train, y_train, x_test):
 
     # training process in a for loop with learning rate drop every 25 epoches.
 
-    historytemp = model.fit(x_train, y_train, batch_size=batch_size, validation_data=(x_validation, y_validation), epochs=maxepoches, verbose=1)
+    historytemp = model.fit(x_train, y_train, batch_size=batch_size, validation_split=0.2, epochs=maxepoches, verbose=1)
     '''historytemp = model.fit_generator(datagen.flow(x_train, y_train, 
         batch_size=batch_size), steps_per_epoch = x_train.shape[0], 
         validation_data=(x_validation, y_validation), callbacks=[reduce_lr], epochs=maxepoches)'''
@@ -274,7 +274,7 @@ def get_data():
 
 if __name__ == '__main__':
 
-    size = 224
+    size = 48
     train_data, train_label, test_data = get_data()
     train_data = train_data.astype('float32')
     test_data = test_data.astype('float32')
@@ -287,9 +287,11 @@ if __name__ == '__main__':
     different_train(model, base_model, train_data, train_label, test_data)'''
     #model = models.cifar100vgg().model
     #model = models.InceptionV3Keras().model
-    #model = models.VGG16Keras().model
+    
 
-    obj = models.ResNet50Keras_fast_unfrozen()
+    model = models.VGG16Keras().model
+    train(model, train_data, train_label, test_data)
+    '''obj = models.ResNet50Keras_fast_unfrozen()
     model = obj.model
     base_model = obj.base_model
     top_model = obj.top_model
@@ -304,7 +306,12 @@ if __name__ == '__main__':
 
     model.summary()
 
-    different_train_unfrozen(model, train_data, train_label, test_data, 0.001, 5)
+    different_train_unfrozen(model, train_data, train_label, test_data, 0.001, 5)'''
+
+
+
+
+
     #different_train(top_model, base_model, train_data, train_label, test_data, False)
     '''obj = models.ResNet50Keras_fast()
     model = obj.model
