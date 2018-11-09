@@ -4,8 +4,8 @@ from keras.datasets import cifar100
 def predict(model,test_data,normalize=True):
     '''if normalize:
         x = self.normalize_production(x)'''
-    get_accuracy(model, test_data)
     predictions = model.predict_classes(test_data, verbose=1)
+    get_accuracy(model, predictions)
 
     f = open('Submission.csv', 'w')
     f.write('ids,labels\n')
@@ -15,9 +15,8 @@ def predict(model,test_data,normalize=True):
 
     f.close()
 
-def get_accuracy(model, test_data):
+def get_accuracy(model, predictions):
 	(x_train, y_train), (x_test, y_test) = cifar100.load_data(label_mode='fine')
-	predictions = model.predict_classes(test_data, verbose=1)
 	correct = 0
 	for i in range(0, x_test.shape[0]):
 		if predictions[i] == y_test[i]:
@@ -28,12 +27,25 @@ def predict_fast(model,test_data, test_data_features,normalize=True):
     '''if normalize:
         x = self.normalize_production(x)'''
     predictions = model.predict_classes(test_data_features, verbose=1)
-    get_accuracy(model, test_data_features)
+    get_accuracy(model, predictions)
     f = open('Submission_Resnet50_224_acc_final.csv', 'w')
     f.write('ids,labels\n')
 
     for i in range(0, test_data.shape[0]):
     	f.write(str(i)+","+str(predictions[i])+'\n')
+
+    f.close()
+
+def predict_for_Model(model,test_data,normalize=True):
+    '''if normalize:
+        x = self.normalize_production(x)'''
+    predictions = model.predict(test_data, verbose=1)
+    get_accuracy(model, predictions)
+    f = open('Submission_Resnet50_224_acc_final_unfrozen.csv', 'w')
+    f.write('ids,labels\n')
+
+    for i in range(0, test_data.shape[0]):
+        f.write(str(i)+","+str(predictions[i])+'\n')
 
     f.close()
 
@@ -44,6 +56,7 @@ def predict_fast_for_Model(model,test_data, test_data_features,normalize=True):
     print(predictions)
     predictions = predictions.argmax(axis=-1)
     print(predictions)
+
     f = open('Submission_resnet50_acc_nodropout.csv', 'w')
     f.write('ids,labels\n')
 
@@ -68,7 +81,7 @@ def predict_fast_unfrozen(model,test_data,normalize=True):
     '''if normalize:
         x = self.normalize_production(x)'''
     predictions = model.predict_classes(test_data, verbose=1)
-    get_accuracy(model)
+    get_accuracy(model, predictions)
     
     f = open('Submission_Resnet50_224_acc_unfrozen.csv', 'w')
     f.write('ids,labels\n')

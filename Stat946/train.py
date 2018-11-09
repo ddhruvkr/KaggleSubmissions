@@ -1,6 +1,6 @@
 import models
 from inputs import get_processed_data, upscale_images
-from test import predict, predict_fast, predict_fast_unfrozen, save_results, load_predict_save, predict_fast_for_Model
+from test import predict, predict_fast, predict_fast_unfrozen, save_results, load_predict_save, predict_fast_for_Model, predict_for_Model
 import numpy as np
 import os.path
 import keras
@@ -295,10 +295,10 @@ if __name__ == '__main__':
 
     obj = models.ResNet50Keras_fast_unfrozen()
     model = obj.model
-    predict(model, test_data)
+    predict_for_Model(model, test_data)
     base_model = obj.base_model
     top_model = obj.top_model
-    model = different_train_unfrozen(model, train_data, train_label, test_data, 0.1, 150)
+    #model = different_train_unfrozen(model, train_data, train_label, test_data, 0.1, 150)
 
     '''for layer in model.layers:
         layer.trainable = True
