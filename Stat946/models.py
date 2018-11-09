@@ -309,7 +309,7 @@ class ResNet50Keras_fast:
     def build_model(self):                                                                                                                                                                                                                                                                                                                                              
         model = Sequential()
         #model.add(GlobalAveragePooling2D(input_shape=[1,1,2048]))
-        model.add(GlobalMaxPooling2D(input_shape=[1,1,2048]))                                                                                                        
+        model.add(GlobalMaxPooling2D(input_shape=[None,None,2048]))                                                                                                        
         #model.add(Flatten(input_shape=[1,1,2048]))
         model.add(Dropout(0.4))
         model.add(Dense(1024, activation='relu'))
@@ -347,15 +347,15 @@ class ResNet50Keras_fast_unfrozen:
        
         top_model = Sequential()
         #model.add(GlobalAveragePooling2D(input_shape=[1,1,512]))
-        top_model.add(GlobalMaxPooling2D(input_shape=[1,1,2048]))                                                                                                        
+        top_model.add(GlobalMaxPooling2D(input_shape=[None,None,2048]))                                                                                                        
         #model.add(Flatten(input_shape=[1,1,512]))
-        top_model.add(Dropout(0.5))
+        top_model.add(Dropout(0.4))
         top_model.add(Dense(1024, activation='relu'))
         top_model.add(BatchNormalization())
         top_model.add(Dropout(0.5))
 
         top_model.add(Dense(self.num_classes, activation='softmax'))
-        top_model.load_weights("Resnet50_224_keras_fast_checkpoint_acc_final.h5")
+        top_model.load_weights("Resnet50.h5")
         #print(' top model summary')
         #top_model.summary()
 

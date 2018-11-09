@@ -15,8 +15,8 @@ def get_inputs():
 	    train_label= pickle.load(f)
 	with open('./data/test_data', 'rb') as f:
 	    test_data = pickle.load(f)
-	print("seconf one")
-	print(test_data)
+	#print("seconf one")
+	#print(test_data)
 	return train_data, train_label, test_data
 
 def get_processed_data():

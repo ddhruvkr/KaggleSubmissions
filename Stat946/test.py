@@ -40,6 +40,7 @@ def predict_for_Model(model,test_data,normalize=True):
     '''if normalize:
         x = self.normalize_production(x)'''
     predictions = model.predict(test_data, verbose=1)
+    predictions = predictions.argmax(axis=-1)
     get_accuracy(model, predictions)
     f = open('Submission_Resnet50_224_acc_final_unfrozen.csv', 'w')
     f.write('ids,labels\n')
