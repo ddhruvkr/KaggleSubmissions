@@ -229,7 +229,7 @@ def different_train_unfrozen(model, x_train, y_train, x_test, learning_rate, max
 
     #learning_rate = 0.0001
     lr_decay = 1e-6
-    lr_drop = 20
+    lr_drop = 25
 
     (x_train1, y_train1), (x_test1, y_test) = cifar100.load_data(label_mode='fine')
     y_test = keras.utils.to_categorical(y_test, 100)
@@ -297,7 +297,7 @@ if __name__ == '__main__':
     model = obj.model
     base_model = obj.base_model
     top_model = obj.top_model
-    model = different_train_unfrozen(model, train_data, train_label, test_data, 0.001, 50)
+    model = different_train_unfrozen(model, train_data, train_label, test_data, 0.1, 150)
 
     '''for layer in model.layers:
         layer.trainable = True
