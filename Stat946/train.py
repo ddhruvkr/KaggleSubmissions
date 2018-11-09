@@ -274,7 +274,7 @@ def get_data():
 
 if __name__ == '__main__':
 
-    size = 48
+    size = 224
     train_data, train_label, test_data = get_data()
     train_data = train_data.astype('float32')
     test_data = test_data.astype('float32')
@@ -289,9 +289,11 @@ if __name__ == '__main__':
     #model = models.InceptionV3Keras().model
     
 
-    model = models.VGG16Keras().model
-    train(model, train_data, train_label, test_data)
-    '''obj = models.ResNet50Keras_fast_unfrozen()
+    '''model = models.VGG16Keras().model
+    train(model, train_data, train_label, test_data)'''
+
+
+    obj = models.ResNet50Keras_fast_unfrozen()
     model = obj.model
     base_model = obj.base_model
     top_model = obj.top_model
@@ -306,7 +308,7 @@ if __name__ == '__main__':
 
     model.summary()
 
-    different_train_unfrozen(model, train_data, train_label, test_data, 0.001, 5)'''
+    different_train_unfrozen(model, train_data, train_label, test_data, 0.001, 5)
 
 
 
