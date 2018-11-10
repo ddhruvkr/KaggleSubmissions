@@ -108,8 +108,8 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
 
         predict_size_train = int(math.ceil(x_train.shape[0] / batch_size))
 
-        if os.path.isfile("Resnet50_100_features_train.npz"):
-            train_features = np.load('Resnet50_100_features_train.npz')
+        if os.path.isfile("Resnet50_100_features_train.npy"):
+            train_features = np.load('Resnet50_100_features_train.npy')
             print("loaded train features")
             #print(train_features['features'])
             #print(train_features.shape)
@@ -117,8 +117,8 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
         else:
             train_features = base_model.predict_generator(generator, steps=predict_size_train, verbose=1)
             #Saving the bottleneck features
-            np.savez('Resnet50_100_features_train', features=train_features)
-            train_features = np.load('Resnet50_100_features_train.npz')
+            np.save('Resnet50_100_features_train', train_features)
+            train_features = np.load('Resnet50_100_features_train.npy')
             # (std, mean, and principal components if ZCA whitening is applied).
             #datagen.fit(x_train)
 
@@ -158,17 +158,26 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
         else:
             train_features = base_model.predict(x_train, verbose=1)
             #Saving the bottleneck features
-            np.savez('Resnet50_224_features_train', features=train_features)
+            np.savez('Resnet50_224_features_train.npz', train_features)
             train_features = np.load('Resnet50_224_features_train.npz')
         
     if os.path.isfile("Resnet50_224_features_test.npz"):
         test_features = np.load('Resnet50_224_features_test.npz')
         print("loaded test features")
+        print(test_features['features'])
+        print("the two should be same")
+        test = base_model.predict(x_test, verbose=1)
+        np.save('check.npy', test)
+        test = np.load('check.npy')
+        print(test)
+        #print(np.load('Resnet50_224_features_test_confirm.npy'))
         #print(test_features.shape)
     else:
         test_features = base_model.predict(x_test, verbose=1)
-        #Saving the bottleneck features
-        np.savez('Resnet50_224_features_test', features=test_features)
+        print(test_features)
+        print("Starting saving test features")
+        np.savez('Resnet50_224_features_test.npz', test_features)
+        print("saved features")
         test_features = np.load('Resnet50_224_features_test.npz')
     print("from bottleneck features")
     predict_fast(model, x_test, test_features['features'])
@@ -290,7 +299,14 @@ def get_data():
 
 if __name__ == '__main__':
 
-    size = 32
+    a = np.array([1.0,2.0,3])
+    np.savetxt('test.txt', a, fmt='%d')
+    b = np.loadtxt('test.txt', dtype=int)
+    print(b)
+    np.save('test3.npy', a)
+    c = np.load('test3.npy')
+    print(c)
+    size = 224
     train_data, train_label, test_data = get_data()
     train_data = train_data.astype('float32')
     test_data = test_data.astype('float32')
