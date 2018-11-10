@@ -15,7 +15,7 @@ from keras.applications.vgg16 import VGG16
 from keras.applications.vgg19 import VGG19
 from keras.applications.resnet50 import ResNet50
 from keras.applications.inception_v3 import InceptionV3
-from keras.applications.densenet import DenseNet121
+#from keras.applications.densenet import DenseNet121
 
 class cifar100vgg:
     def __init__(self, train=False):

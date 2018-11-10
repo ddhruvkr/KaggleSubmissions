@@ -149,8 +149,8 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
         print ("creating bottleneck features for training data")
         #Creating bottleneck features for the testing data
 
-        if os.path.isfile("Resnet50_224_features_train.npz"):
-            train_features = np.load('Resnet50_224_features_train.npz')
+        if os.path.isfile("Resnet50_224_features_train_new.npz"):
+            train_features = np.load('Resnet50_224_features_train_new.npz')
             print("loaded train features")
             #print(train_features['features'])
             #print(train_features.shape)
@@ -158,27 +158,27 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
         else:
             train_features = base_model.predict(x_train, verbose=1)
             #Saving the bottleneck features
-            np.savez('Resnet50_224_features_train.npz', train_features)
-            train_features = np.load('Resnet50_224_features_train.npz')
+            np.savez('Resnet50_224_features_train_new.npz', features=train_features)
+            train_features = np.load('Resnet50_224_features_train_new.npz')
         
-    if os.path.isfile("Resnet50_224_features_test.npz"):
-        test_features = np.load('Resnet50_224_features_test.npz')
+    if os.path.isfile("Resnet50_224_features_test_new.npz"):
+        test_features = np.load('Resnet50_224_features_test_new.npz')
         print("loaded test features")
-        print(test_features['features'])
+        '''print(test_features['features'])
         print("the two should be same")
         test = base_model.predict(x_test, verbose=1)
         np.save('check.npy', test)
         test = np.load('check.npy')
-        print(test)
+        print(test)'''
         #print(np.load('Resnet50_224_features_test_confirm.npy'))
         #print(test_features.shape)
     else:
         test_features = base_model.predict(x_test, verbose=1)
-        print(test_features)
-        print("Starting saving test features")
-        np.savez('Resnet50_224_features_test.npz', test_features)
+        #print(test_features)
+        #print("Starting saving test features")
+        np.savez('Resnet50_224_features_test_new.npz', features=test_features)
         print("saved features")
-        test_features = np.load('Resnet50_224_features_test.npz')
+        test_features = np.load('Resnet50_224_features_test_new.npz')
     print("from bottleneck features")
     predict_fast(model, x_test, test_features['features'])
 
@@ -325,14 +325,15 @@ if __name__ == '__main__':
     train(model, train_data, train_label, test_data)'''
 
 
-    '''obj = models.ResNet50Keras_fast_unfrozen()
+    obj = models.ResNet50Keras_fast()
     model = obj.model
     #predict_for_Model(model, test_data)
     base_model = obj.base_model
-    top_model = obj.top_model
-    different_train_unfrozen(model, train_data, train_label, test_data, 0.1, 1)
+    different_train(model,base_model, train_data, train_label, test_data, False, 0.1, 10)
 
-    model.load_weights("Resnet50_224_keras_fast_checkpoint_acc_unfrozen.h5")
+    #model.load_weights("Resnet50.h5")
+    obj1 = models.ResNet50Keras_fast_unfrozen()
+    model = obj.model
     predict_for_Model(model, test_data)
     print('prediction done')
     for layer in model.layers:
@@ -344,22 +345,22 @@ if __name__ == '__main__':
 
     #model.summary()
 
-    different_train_unfrozen(model, train_data, train_label, test_data, 0.0001, 1)'''
+    different_train_unfrozen(model, train_data, train_label, test_data, 0.0001, 5)
 
 
 
 
 
     #different_train(top_model, base_model, train_data, train_label, test_data, False)
-    obj = models.ResNet50Keras_fast()
+    '''obj = models.ResNet50Keras_fast()
     model = obj.model
     base_model = obj.base_model
-    different_train(model, base_model, train_data, train_label, test_data, False, 0.1, 2)
+    different_train(model, base_model, train_data, train_label, test_data, False, 0.1, 200)
  
     obj = models.ResNet50Keras_fast_unfrozen()
     model = obj.model
     predict_for_Model(model, test_data)
-    print("The two accuracies should match")
+    print("The two accuracies should match")'''
 
 
 
