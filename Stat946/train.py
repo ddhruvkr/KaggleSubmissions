@@ -158,8 +158,8 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
         else:
             train_features = base_model.predict(x_train, verbose=1)
             #Saving the bottleneck features
-            #np.savez('Resnet50_224_features_train', features=train_features)
-            #train_features = np.load('Resnet50_224_features_train.npz')
+            np.savez('Resnet50_224_features_train', features=train_features)
+            train_features = np.load('Resnet50_224_features_train.npz')
         
     if os.path.isfile("Resnet50_224_features_test.npz"):
         test_features = np.load('Resnet50_224_features_test.npz')
@@ -168,8 +168,8 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
     else:
         test_features = base_model.predict(x_test, verbose=1)
         #Saving the bottleneck features
-        #np.savez('Resnet50_224_features_test', features=test_features)
-        #test_features = np.load('Resnet50_224_features_test.npz')
+        np.savez('Resnet50_224_features_test', features=test_features)
+        test_features = np.load('Resnet50_224_features_test.npz')
     print("from bottleneck features")
     predict_fast(model, x_test, test_features['features'])
 
@@ -290,7 +290,7 @@ def get_data():
 
 if __name__ == '__main__':
 
-    size = 224
+    size = 32
     train_data, train_label, test_data = get_data()
     train_data = train_data.astype('float32')
     test_data = test_data.astype('float32')
@@ -309,7 +309,7 @@ if __name__ == '__main__':
     train(model, train_data, train_label, test_data)'''
 
 
-    obj = models.ResNet50Keras_fast_unfrozen()
+    '''obj = models.ResNet50Keras_fast_unfrozen()
     model = obj.model
     #predict_for_Model(model, test_data)
     base_model = obj.base_model
@@ -328,22 +328,22 @@ if __name__ == '__main__':
 
     #model.summary()
 
-    different_train_unfrozen(model, train_data, train_label, test_data, 0.0001, 1)
+    different_train_unfrozen(model, train_data, train_label, test_data, 0.0001, 1)'''
 
 
 
 
 
     #different_train(top_model, base_model, train_data, train_label, test_data, False)
-    '''obj = models.ResNet50Keras_fast()
+    obj = models.ResNet50Keras_fast()
     model = obj.model
     base_model = obj.base_model
-    different_train(model, base_model, train_data, train_label, test_data, False, 0.1, 150)
+    different_train(model, base_model, train_data, train_label, test_data, False, 0.1, 2)
  
     obj = models.ResNet50Keras_fast_unfrozen()
     model = obj.model
     predict_for_Model(model, test_data)
-    print("The two accuracies should match")'''
+    print("The two accuracies should match")
 
 
 

@@ -294,7 +294,7 @@ class ResNet50Keras_fast:
     def __init__(self, train=True):
         self.num_classes = 100
         self.weight_decay = 0.0005
-        self.x_shape = [224,224, 3]
+        self.x_shape = [32,32, 3]
         self.model = self.build_model()
         self.base_model = self.build_base_model()
 
@@ -319,7 +319,7 @@ class ResNet50Keras_fast:
         model.add(BatchNormalization())
         model.add(Dropout(0.5))'''
         model.add(Dense(self.num_classes, activation='softmax'))
-        model.load_weights("Resnet50.h5")
+        #model.load_weights("Resnet50.h5")
         #print('model simmary')
         #odel.summary()
         return model
@@ -328,7 +328,7 @@ class ResNet50Keras_fast_unfrozen:
     def __init__(self, train=True):
         self.num_classes = 100
         self.weight_decay = 0.0005
-        self.x_shape = [224, 224, 3]
+        self.x_shape = [32, 32, 3]
         self.model, self.base_model, self.top_model = self.build_model()
 
     def build_model(self):
@@ -346,7 +346,7 @@ class ResNet50Keras_fast_unfrozen:
             all_layers[i].trainable = False'''
 
        
-        '''top_model = Sequential()
+        top_model = Sequential()
         #model.add(GlobalAveragePooling2D(input_shape=[1,1,512]))
         top_model.add(GlobalMaxPooling2D(input_shape=[None,None,2048]))                                                                                                        
         #model.add(Flatten(input_shape=[1,1,512]))
@@ -360,9 +360,9 @@ class ResNet50Keras_fast_unfrozen:
         #print(' top model summary')
         #top_model.summary()
 
-        model = Model(inputs = base_model.input, outputs=top_model(base_model.output))'''
+        model = Model(inputs = base_model.input, outputs=top_model(base_model.output))
 
-        top_model = base_model
+        '''top_model = base_model
 
         x = base_model.output
         x = GlobalMaxPooling2D()(x)
@@ -375,7 +375,7 @@ class ResNet50Keras_fast_unfrozen:
         predictions = Dense(self.num_classes, activation='softmax')(x)
 
         # This is the model we will train
-        model = Model(inputs=base_model.input, outputs=predictions)
+        model = Model(inputs=base_model.input, outputs=predictions)'''
         '''mid_start = model.get_layer('activation_40')
         all_layers = model.layers
         for i in range(model.layers.index(mid_start)):
