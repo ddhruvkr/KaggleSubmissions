@@ -1,4 +1,5 @@
 import keras
+#asd
 from keras.datasets import cifar100
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
@@ -294,7 +295,7 @@ class ResNet50Keras_fast:
     def __init__(self, train=True):
         self.num_classes = 100
         self.weight_decay = 0.0005
-        self.x_shape = [32,32, 3]
+        self.x_shape = [224,224, 3]
         self.model = self.build_model()
         self.base_model = self.build_base_model()
 
@@ -328,7 +329,7 @@ class ResNet50Keras_fast_unfrozen:
     def __init__(self, train=True):
         self.num_classes = 100
         self.weight_decay = 0.0005
-        self.x_shape = [32, 32, 3]
+        self.x_shape = [224, 224, 3]
         self.model, self.base_model, self.top_model = self.build_model()
 
     def build_model(self):
