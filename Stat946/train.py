@@ -62,7 +62,7 @@ def train(model, x_train, y_train, x_test):
 
 
 
-def different_train(model, base_model, x_train, y_train, x_test, data_augment, learning_rate, maxepoches):
+def different_train(model, base_model, x_train, y_train, x_test, data_augment, learning_rate, maxepoches, lr_drop):
 
     # training parameters
     batch_size = 128
@@ -70,7 +70,7 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
 
     #learning_rate = 0.0001
     lr_decay = 1e-6
-    lr_drop = 20
+    #lr_drop = 20
     (x_train1, y_train1), (x_test1, y_test) = cifar100.load_data(label_mode='fine')
     #x_train, x_validation, y_train, y_validation = get_validation_data(x_train, y_train)
     def lr_scheduler(epoch):
@@ -246,7 +246,7 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
 
 
 
-def different_train_unfrozen(model, x_train, y_train, x_test, learning_rate, maxepoches):
+def different_train_unfrozen(model, x_train, y_train, x_test, learning_rate, maxepoches, lr_drop):
 
     # training parameters
     batch_size = 128
@@ -254,17 +254,19 @@ def different_train_unfrozen(model, x_train, y_train, x_test, learning_rate, max
 
     #learning_rate = 0.0001
     lr_decay = 1e-6
-    lr_drop = 25
+    #lr_drop = 25
 
     (x_train1, y_train1), (x_test1, y_test) = cifar100.load_data(label_mode='fine')
     y_test = keras.utils.to_categorical(y_test, 100)
     #x_train, x_validation, y_train, y_validation = get_validation_data(x_train, y_train)
     def lr_scheduler(epoch):
+        #predict_for_Model(model, x_test)
+        #print('test accuracy')
         return learning_rate * (0.5 ** (epoch // lr_drop))
 
     reduce_lr = keras.callbacks.LearningRateScheduler(lr_scheduler)
 
-    checkpointer = ModelCheckpoint(filepath='Resnet50_224_keras_fast_checkpoint_acc_unfrozen.h5', 
+    checkpointer = ModelCheckpoint(filepath='Resnet50_224_keras_fast_checkpoint_acc_unfrozen_32_noval.h5', 
         monitor='val_acc', verbose=1, save_best_only=True)
     # maybe move optimizer and loss part to the models section?
     # optimization details
@@ -282,7 +284,7 @@ def different_train_unfrozen(model, x_train, y_train, x_test, learning_rate, max
     '''historytemp = model.fit_generator(datagen.flow(x_train, y_train, 
         batch_size=batch_size), steps_per_epoch = x_train.shape[0], 
         validation_data=(x_validation, y_validation), callbacks=[reduce_lr], epochs=maxepoches)'''
-    model.load_weights("Resnet50_224_keras_fast_checkpoint_acc_unfrozen.h5")
+    model.load_weights("Resnet50_224_keras_fast_checkpoint_acc_unfrozen_32_noval.h5")
     predict_for_Model(model, x_test)
     print('prediction done')
     #Creating bottleneck features for the testing data
@@ -299,13 +301,6 @@ def get_data():
 
 if __name__ == '__main__':
 
-    a = np.array([1.0,2.0,3])
-    np.savetxt('test.txt', a, fmt='%d')
-    b = np.loadtxt('test.txt', dtype=int)
-    print(b)
-    np.save('test3.npy', a)
-    c = np.load('test3.npy')
-    print(c)
     size = 224
     train_data, train_label, test_data = get_data()
     train_data = train_data.astype('float32')
@@ -319,33 +314,38 @@ if __name__ == '__main__':
     different_train(model, base_model, train_data, train_label, test_data)'''
     #model = models.cifar100vgg().model
     #model = models.InceptionV3Keras().model
-    
-
     '''model = models.VGG16Keras().model
     train(model, train_data, train_label, test_data)'''
 
-
-    obj = models.ResNet50Keras_fast()
-    model = obj.model
+    #obj = models.ResNet50Keras_fast()
+    #model = obj.model
     #predict_for_Model(model, test_data)
-    base_model = obj.base_model
-    different_train(model,base_model, train_data, train_label, test_data, False, 0.1, 10)
+    #base_model = obj.base_model
+    #different_train(model,base_model, train_data, train_label, test_data, False, 0.1, 150, 20)
 
     #model.load_weights("Resnet50.h5")
     obj1 = models.ResNet50Keras_fast_unfrozen()
-    model = obj.model
-    predict_for_Model(model, test_data)
-    print('prediction done')
-    for layer in model.layers:
+    model1 = obj1.model
+    #model1.load_weights("Resnet50.h5")
+    predict_for_Model(model1, test_data)
+    #print('prediction done, should be saem')
+    #model.summary()
+    
+
+    '''model1.load_weights('Resnet50_224_keras_fast_checkpoint_acc_unfrozen_40_noval.h5')
+    predict_for_Model(model1, test_data)
+    for layer in model1.layers:
         layer.trainable = True
-    mid_start = model.get_layer('activation_40')
-    all_layers = model.layers
-    for i in range(model.layers.index(mid_start)):
+    mid_start = model1.get_layer('activation_31')
+    all_layers = model1.layers
+    for i in range(model1.layers.index(mid_start)):
         all_layers[i].trainable = False
 
     #model.summary()
 
-    different_train_unfrozen(model, train_data, train_label, test_data, 0.0001, 5)
+    different_train_unfrozen(model1, train_data, train_label, test_data, 0.0002, 40, 6)'''
+
+    
 
 
 
