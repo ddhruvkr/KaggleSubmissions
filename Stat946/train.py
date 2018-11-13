@@ -149,8 +149,8 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
         print ("creating bottleneck features for training data")
         #Creating bottleneck features for the testing data
 
-        if os.path.isfile("Resnet50_224_features_train_new.npz"):
-            train_features = np.load('Resnet50_224_features_train_new.npz')
+        if os.path.isfile("VGG16_48_features_train.npz"):
+            train_features = np.load('VGG16_48_features_train.npz')
             print("loaded train features")
             #print(train_features['features'])
             #print(train_features.shape)
@@ -158,11 +158,11 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
         else:
             train_features = base_model.predict(x_train, verbose=1)
             #Saving the bottleneck features
-            np.savez('Resnet50_224_features_train_new.npz', features=train_features)
-            train_features = np.load('Resnet50_224_features_train_new.npz')
+            np.savez('VGG16_48_features_train.npz', features=train_features)
+            train_features = np.load('VGG16_48_features_train.npz')
         
-    if os.path.isfile("Resnet50_224_features_test_new.npz"):
-        test_features = np.load('Resnet50_224_features_test_new.npz')
+    if os.path.isfile("VGG16_48_features_test.npz"):
+        test_features = np.load('VGG16_48_features_test.npz')
         print("loaded test features")
         '''print(test_features['features'])
         print("the two should be same")
@@ -176,9 +176,9 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
         test_features = base_model.predict(x_test, verbose=1)
         #print(test_features)
         #print("Starting saving test features")
-        np.savez('Resnet50_224_features_test_new.npz', features=test_features)
+        np.savez('VGG16_48_features_test.npz', features=test_features)
         print("saved features")
-        test_features = np.load('Resnet50_224_features_test_new.npz')
+        test_features = np.load('VGG16_48_features_test.npz')
     print("from bottleneck features")
     predict_fast(model, x_test, test_features['features'])
 
@@ -197,7 +197,7 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
 
 
     #try for val_loss
-    checkpointer = ModelCheckpoint(filepath='Resnet50.h5', 
+    checkpointer = ModelCheckpoint(filepath='VGG16.h5', 
         monitor='val_acc', verbose=1, save_best_only=True)
     '''if os.path.isfile("vgg16_features_validation_vals.npz"):
         validation_features = data = np.load('vgg16_features_validation_vals.npz')
@@ -227,13 +227,13 @@ def different_train(model, base_model, x_train, y_train, x_test, data_augment, l
         validation_split=0.1, shuffle=True, 
         batch_size=batch_size, epochs=maxepoches, verbose=1, callbacks=[reduce_lr])'''
     y_test = keras.utils.to_categorical(y_test, 100)
-    historytemp = model.fit(train_features['features'], y_train, validation_data=(test_features['features'], y_test),
+    historytemp = model.fit(train_features['features'], y_train, validation_split=0.05, shuffle=True,
         batch_size=batch_size, epochs=maxepoches, verbose=1, callbacks=[reduce_lr, checkpointer])
     '''historytemp = model.fit_generator(datagen.flow(x_train, y_train, 
         batch_size=batch_size), steps_per_epoch = x_train.shape[0], 
         validation_data=(x_validation, y_validation), callbacks=[reduce_lr], epochs=maxepoches)'''
     #model.save_weights('resnet50keras_fast.h5')
-    model.load_weights("Resnet50.h5")
+    model.load_weights("VGG16.h5")
     predict_fast(model, x_test, test_features['features'])
     print('prediction done')
     #Creating bottleneck features for the testing data
@@ -266,7 +266,7 @@ def different_train_unfrozen(model, x_train, y_train, x_test, learning_rate, max
 
     reduce_lr = keras.callbacks.LearningRateScheduler(lr_scheduler)
 
-    checkpointer = ModelCheckpoint(filepath='Resnet50_224_keras_fast_checkpoint_acc_unfrozen_32_noval.h5', 
+    checkpointer = ModelCheckpoint(filepath='VGG16_48_keras_unfrozen_black_pool3.h5', 
         monitor='val_acc', verbose=1, save_best_only=True)
     # maybe move optimizer and loss part to the models section?
     # optimization details
@@ -277,14 +277,14 @@ def different_train_unfrozen(model, x_train, y_train, x_test, learning_rate, max
 
 
     #put validation features too
-    '''historytemp = model.fit(x_train, y_train, validation_split=0.1, shuffle=True, batch_size=batch_size, 
-        epochs=maxepoches, verbose=1, callbacks=[reduce_lr, checkpointer])'''
+    historytemp = model.fit(x_train, y_train, validation_split=0.05, shuffle=True, batch_size=batch_size, 
+        epochs=maxepoches, verbose=1, callbacks=[reduce_lr, checkpointer])
     
-    historytemp = model.fit(x_train, y_train, validation_data=(x_test, y_test), batch_size=batch_size, epochs=maxepoches, verbose=1, callbacks=[reduce_lr, checkpointer])
+    #historytemp = model.fit(x_train, y_train, validation_data=(x_test, y_test), batch_size=batch_size, epochs=maxepoches, verbose=1, callbacks=[reduce_lr, checkpointer])
     '''historytemp = model.fit_generator(datagen.flow(x_train, y_train, 
         batch_size=batch_size), steps_per_epoch = x_train.shape[0], 
         validation_data=(x_validation, y_validation), callbacks=[reduce_lr], epochs=maxepoches)'''
-    model.load_weights("Resnet50_224_keras_fast_checkpoint_acc_unfrozen_32_noval.h5")
+    model.load_weights("VGG16_48_keras_unfrozen_black_pool3.h5")
     predict_for_Model(model, x_test)
     print('prediction done')
     #Creating bottleneck features for the testing data
@@ -301,17 +301,23 @@ def get_data():
 
 if __name__ == '__main__':
 
-    size = 224
+    size = 48
     train_data, train_label, test_data = get_data()
     train_data = train_data.astype('float32')
     test_data = test_data.astype('float32')
     train_data, test_data = upscale_images(train_data, test_data, size)
 
 
-    '''obj = models.InceptionV3Keras_fast()
+    '''obj = models.VGG16Keras_fast()
     model = obj.model
     base_model = obj.base_model
-    different_train(model, base_model, train_data, train_label, test_data)'''
+    different_train(model, base_model, train_data, train_label, test_data, False, 0.1, 150, 20)'''
+
+    obj = models.VGG16Keras_fast_unfrozen()
+    model1 = obj.model
+    model1.load_weights("VGG16_48_keras_unfrozen_black_pool4.h5")
+    predict_for_Model(model1, test_data)
+    different_train_unfrozen(model1, train_data, train_label, test_data, 0.001, 25, 5)
     #model = models.cifar100vgg().model
     #model = models.InceptionV3Keras().model
     '''model = models.VGG16Keras().model
@@ -324,12 +330,12 @@ if __name__ == '__main__':
     #different_train(model,base_model, train_data, train_label, test_data, False, 0.1, 150, 20)
 
     #model.load_weights("Resnet50.h5")
-    obj1 = models.ResNet50Keras_fast_unfrozen()
+    '''obj1 = models.ResNet50Keras_fast_unfrozen()
     model1 = obj1.model
     #model1.load_weights("Resnet50.h5")
     predict_for_Model(model1, test_data)
     #print('prediction done, should be saem')
-    #model.summary()
+    #model.summary()'''
     
 
     '''model1.load_weights('Resnet50_224_keras_fast_checkpoint_acc_unfrozen_40_noval.h5')

@@ -244,7 +244,7 @@ class VGG16Keras_fast:
     def build_model(self):                                                                                                                                                                                                                                                                                                                                              
         model = Sequential()
         #model.add(GlobalAveragePooling2D(input_shape=[1,1,512]))
-        model.add(GlobalMaxPooling2D(input_shape=[1,1,512]))                                                                                                        
+        model.add(GlobalMaxPooling2D(input_shape=[None,None,512]))                                                                                                        
         #model.add(Flatten(input_shape=[1,1,512]))
         model.add(Dropout(0.5))
         model.add(Dense(1024, activation='relu'))
@@ -401,7 +401,7 @@ class VGG16Keras_fast_unfrozen:
                                                                                                                                                                                                                                                                                                                                               
         top_model = Sequential()
         #model.add(GlobalAveragePooling2D(input_shape=[1,1,512]))
-        top_model.add(GlobalMaxPooling2D(input_shape=[1,1,512]))                                                                                                        
+        top_model.add(GlobalMaxPooling2D(input_shape=[None,None,512]))                                                                                                        
         #model.add(Flatten(input_shape=[1,1,512]))
         top_model.add(Dropout(0.5))
         top_model.add(Dense(1024, activation='relu'))
@@ -411,7 +411,7 @@ class VGG16Keras_fast_unfrozen:
         model.add(BatchNormalization())
         model.add(Dropout(0.5))'''
         top_model.add(Dense(self.num_classes, activation='softmax'))
-        top_model.load_weights("vgg16keras_fast.h5")
+        top_model.load_weights("VGG16.h5")
         print(' top model summary')
         top_model.summary()
         '''model = Sequential() #new model
@@ -420,7 +420,7 @@ class VGG16Keras_fast_unfrozen:
         model.add(top_model)'''
         model = Model(inputs= base_model.input, outputs= top_model(base_model.output))
         model.summary()
-        mid_start = model.get_layer('block4_pool')
+        mid_start = model.get_layer('block3_pool')
         all_layers = model.layers
         for i in range(model.layers.index(mid_start)):
             all_layers[i].trainable = False

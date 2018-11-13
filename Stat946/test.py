@@ -42,7 +42,7 @@ def predict_for_Model(model,test_data,normalize=True):
     predictions = model.predict(test_data, verbose=1)
     predictions = predictions.argmax(axis=-1)
     get_accuracy(model, predictions)
-    f = open('Submission_Resnet50.csv', 'w')
+    f = open('Submission_VGG16_48_unfrozen_blackpool3.csv', 'w')
     f.write('ids,labels\n')
 
     for i in range(0, test_data.shape[0]):
