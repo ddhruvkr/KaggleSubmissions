@@ -156,9 +156,18 @@ if __name__ == '__main__':
     train_data = train_data.astype('float32')
     test_data = test_data.astype('float32')
 
+    #this takes in the final weights of the Resnet model and gives the accuracy on the test set
+    # and creates the submission file
+    size = 224
+    train_data, test_data = upscale_images(train_data, test_data, size)
+    ResNet_obj = models.ResNet50Keras_fast_unfrozen()
+    ResNet_model = ResNet_obj.model
+    ResNet_model.summary()
+    ResNet_model.load_weights('Resnet50_224_keras_fast_checkpoint_acc_unfrozen_32_noval.h5')
+    predict_for_Model(ResNet_model, test_data)
 
     #VGG16
-
+    #Uncomment to run VGG16 model
     '''size = 48
     train_data, test_data = upscale_images(train_data, test_data, size)
     VGG_obj = models.VGG16Keras_fast()
@@ -191,6 +200,7 @@ if __name__ == '__main__':
 
 
     #RESNET50
+    #Uncomment to run Resnet50 model
     '''size = 224
     train_data, test_data = upscale_images(train_data, test_data, size)
     ResNet_obj = models.ResNet50Keras_fast()
@@ -236,14 +246,6 @@ if __name__ == '__main__':
         all_layers[i].trainable = False
     different_train_unfrozen(ResNet_model3, train_data, train_label, test_data, 0.0001,
         3, 2, "Resnet50_224_keras_activation_22.h5")'''
-
-    size = 224
-    train_data, test_data = upscale_images(train_data, test_data, size)
-    ResNet_obj = models.ResNet50Keras_fast_unfrozen()
-    ResNet_model = ResNet_obj.model
-    ResNet_model.summary()
-    ResNet_model.load_weights('Resnet50_224_keras_fast_checkpoint_acc_unfrozen_32_noval.h5')
-    predict_for_Model(ResNet_model, test_data)
     
     '''
     # at compilation the weights get reset, not sure about this
