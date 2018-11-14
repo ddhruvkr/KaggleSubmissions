@@ -237,6 +237,8 @@ if __name__ == '__main__':
     different_train_unfrozen(ResNet_model3, train_data, train_label, test_data, 0.0001,
         3, 2, "Resnet50_224_keras_activation_22.h5")'''
 
+    size = 224
+    train_data, test_data = upscale_images(train_data, test_data, size)
     ResNet_obj = models.ResNet50Keras_fast_unfrozen()
     ResNet_model = ResNet_obj.model
     ResNet_model.summary()
