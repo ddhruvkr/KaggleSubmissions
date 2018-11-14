@@ -158,17 +158,17 @@ if __name__ == '__main__':
 
     #this takes in the final weights of the Resnet model and gives the accuracy on the test set
     # and creates the submission file
-    '''size = 224
+    size = 224
     train_data, test_data = upscale_images(train_data, test_data, size)
     ResNet_obj = models.ResNet50Keras_fast_unfrozen()
     ResNet_model = ResNet_obj.model
     ResNet_model.summary()
     ResNet_model.load_weights('h5/Resnet50_224_keras_fast_checkpoint_acc_unfrozen_32_noval.h5')
-    predict_for_Model(ResNet_model, test_data)'''
+    predict_for_Model(ResNet_model, test_data)
 
     #VGG16
     #Uncomment to run VGG16 model
-    size = 48
+    '''size = 48
     train_data, test_data = upscale_images(train_data, test_data, size)
     VGG_obj = models.VGG16Keras_fast()
     model = VGG_obj.model
@@ -195,7 +195,7 @@ if __name__ == '__main__':
         all_layers[i].trainable = False
     predict_for_Model(model2, test_data)
     different_train_unfrozen(model2, train_data, train_label, test_data, 0.001,
-        5, 1, "h5/VGG16_48_keras_unfrozen_black_pool3.h5")
+        5, 1, "h5/VGG16_48_keras_unfrozen_black_pool3.h5")'''
 
 
 
