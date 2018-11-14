@@ -158,23 +158,23 @@ if __name__ == '__main__':
 
     #this takes in the final weights of the Resnet model and gives the accuracy on the test set
     # and creates the submission file
-    size = 224
+    '''size = 224
     train_data, test_data = upscale_images(train_data, test_data, size)
     ResNet_obj = models.ResNet50Keras_fast_unfrozen()
     ResNet_model = ResNet_obj.model
     ResNet_model.summary()
-    ResNet_model.load_weights('Resnet50_224_keras_fast_checkpoint_acc_unfrozen_32_noval.h5')
-    predict_for_Model(ResNet_model, test_data)
+    ResNet_model.load_weights('h5/Resnet50_224_keras_fast_checkpoint_acc_unfrozen_32_noval.h5')
+    predict_for_Model(ResNet_model, test_data)'''
 
     #VGG16
     #Uncomment to run VGG16 model
-    '''size = 48
+    size = 48
     train_data, test_data = upscale_images(train_data, test_data, size)
     VGG_obj = models.VGG16Keras_fast()
     model = VGG_obj.model
     base_model = VGG_obj.base_model
     different_train(model, base_model, train_data, train_label, test_data, False, 0.1,
-        10, 5, "VGG16.h5", "VGG16_48_features_train.npz", "VGG16_48_features_test.npz")
+        10, 5, "h5/VGG16.h5", "npz/VGG16_48_features_train.npz", "npz/VGG16_48_features_test.npz")
 
     VGG_obj1 = models.VGG16Keras_fast_unfrozen()
     model1 = VGG_obj1.model
@@ -184,7 +184,7 @@ if __name__ == '__main__':
         all_layers[i].trainable = False
     predict_for_Model(model1, test_data)
     different_train_unfrozen(model1, train_data, train_label, test_data, 0.01,
-        5, 1, "VGG16_48_keras_unfrozen_black_pool4.h5")
+        5, 1, "h5/VGG16_48_keras_unfrozen_black_pool4.h5")
 
     VGG_obj2 = models.VGG16Keras_fast_unfrozen()
     model2 = VGG_obj2.model
@@ -195,7 +195,7 @@ if __name__ == '__main__':
         all_layers[i].trainable = False
     predict_for_Model(model2, test_data)
     different_train_unfrozen(model2, train_data, train_label, test_data, 0.001,
-        5, 1, "VGG16_48_keras_unfrozen_black_pool3.h5")'''
+        5, 1, "h5/VGG16_48_keras_unfrozen_black_pool3.h5")
 
 
 
@@ -207,7 +207,7 @@ if __name__ == '__main__':
     ResNet_model = ResNet_obj.model
     ResNet_base_model = ResNet_obj.base_model
     different_train(ResNet_model,ResNet_base_model, train_data, train_label, test_data, False, 0.1,
-        5, 5, "Resnet50.h5", "Resnet50_224_features_train.npz", "Resnet50_224_features_test.npz")
+        5, 5, "h5/Resnet50.h5", "npz/Resnet50_224_features_train.npz", "npz/Resnet50_224_features_test.npz")
 
     #model.load_weights("Resnet50.h5")
     ResNet_obj1 = models.ResNet50Keras_fast_unfrozen()
@@ -220,7 +220,7 @@ if __name__ == '__main__':
     for i in range(ResNet_model1.layers.index(Resnet_mid_start)):
         all_layers[i].trainable = False
     different_train_unfrozen(ResNet_model1, train_data, train_label, test_data, 0.01,
-        3, 2, "Resnet50_224_keras_activation_40.h5")'''
+        3, 2, "h5/Resnet50_224_keras_activation_40.h5")'''
     
 
     '''ResNet_obj2 = models.ResNet50Keras_fast_unfrozen()
@@ -233,7 +233,7 @@ if __name__ == '__main__':
     for i in range(ResNet_model2.layers.index(mid_start)):
         all_layers[i].trainable = False
     different_train_unfrozen(ResNet_model2, train_data, train_label, test_data, 0.001,
-        3, 2, "Resnet50_224_keras_activation_31.h5")
+        3, 2, "h5/Resnet50_224_keras_activation_31.h5")
 
     ResNet_obj3 = models.ResNet50Keras_fast_unfrozen()
     ResNet_model3 = ResNet_obj3.model
@@ -245,7 +245,7 @@ if __name__ == '__main__':
     for i in range(ResNet_model3.layers.index(mid_start)):
         all_layers[i].trainable = False
     different_train_unfrozen(ResNet_model3, train_data, train_label, test_data, 0.0001,
-        3, 2, "Resnet50_224_keras_activation_22.h5")'''
+        3, 2, "h5/Resnet50_224_keras_activation_22.h5")'''
     
     '''
     # at compilation the weights get reset, not sure about this

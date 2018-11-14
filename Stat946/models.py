@@ -128,7 +128,7 @@ class VGG16Keras_fast_unfrozen:
         model.add(BatchNormalization())
         model.add(Dropout(0.5))'''
         top_model.add(Dense(self.num_classes, activation='softmax'))
-        top_model.load_weights("VGG16.h5")
+        top_model.load_weights("h5/VGG16.h5")
         print(' top model summary')
         top_model.summary()
         model = Model(inputs= base_model.input, outputs= top_model(base_model.output))
@@ -190,7 +190,7 @@ class ResNet50Keras_fast_unfrozen:
         top_model.add(Dropout(0.5))
 
         top_model.add(Dense(self.num_classes, activation='softmax'))
-        top_model.load_weights("Resnet50.h5")
+        top_model.load_weights("h5/Resnet50.h5")
         #print(' top model summary')
         #top_model.summary()
 
