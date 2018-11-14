@@ -191,7 +191,7 @@ if __name__ == '__main__':
 
 
     #RESNET50
-    size = 224
+    '''size = 224
     train_data, test_data = upscale_images(train_data, test_data, size)
     ResNet_obj = models.ResNet50Keras_fast()
     ResNet_model = ResNet_obj.model
@@ -210,10 +210,10 @@ if __name__ == '__main__':
     for i in range(ResNet_model1.layers.index(Resnet_mid_start)):
         all_layers[i].trainable = False
     different_train_unfrozen(ResNet_model1, train_data, train_label, test_data, 0.01,
-        3, 2, "Resnet50_224_keras_activation_40.h5")
+        3, 2, "Resnet50_224_keras_activation_40.h5")'''
     
 
-    ResNet_obj2 = models.ResNet50Keras_fast_unfrozen()
+    '''ResNet_obj2 = models.ResNet50Keras_fast_unfrozen()
     ResNet_model2 = ResNet_obj2.model
     ResNet_model2.summary()
     ResNet_model2.load_weights('Resnet50_224_keras_activation_40.h5')
@@ -222,12 +222,26 @@ if __name__ == '__main__':
     all_layers = ResNet_model2.layers
     for i in range(ResNet_model2.layers.index(mid_start)):
         all_layers[i].trainable = False
-
-    #model.summary()
-
     different_train_unfrozen(ResNet_model2, train_data, train_label, test_data, 0.001,
         3, 2, "Resnet50_224_keras_activation_31.h5")
 
+    ResNet_obj3 = models.ResNet50Keras_fast_unfrozen()
+    ResNet_model3 = ResNet_obj3.model
+    ResNet_model3.summary()
+    ResNet_model3.load_weights('Resnet50_224_keras_activation_31.h5')
+    predict_for_Model(ResNet_model3, test_data)
+    mid_start = ResNet_model3.get_layer('activation_22')
+    all_layers = ResNet_model3.layers
+    for i in range(ResNet_model3.layers.index(mid_start)):
+        all_layers[i].trainable = False
+    different_train_unfrozen(ResNet_model3, train_data, train_label, test_data, 0.0001,
+        3, 2, "Resnet50_224_keras_activation_22.h5")'''
+
+    ResNet_obj = models.ResNet50Keras_fast_unfrozen()
+    ResNet_model = ResNet_obj.model
+    ResNet_model.summary()
+    ResNet_model.load_weights('Resnet50_224_keras_fast_checkpoint_acc_unfrozen_32_noval.h5')
+    predict_for_Model(ResNet_model, test_data)
     
     '''
     # at compilation the weights get reset, not sure about this
