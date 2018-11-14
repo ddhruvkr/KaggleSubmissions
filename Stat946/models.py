@@ -173,7 +173,7 @@ class ResNet50Keras_fast_unfrozen:
         self.num_classes = 100
         self.weight_decay = 0.0005
         self.x_shape = [224, 224, 3]
-        self.model, self.base_model, self.top_model = self.build_model()
+        self.model = self.build_model()
 
     def build_model(self):
         base_model = ResNet50(weights = 'imagenet', include_top=False, input_shape=self.x_shape)
@@ -195,4 +195,5 @@ class ResNet50Keras_fast_unfrozen:
         #top_model.summary()
 
         model = Model(inputs = base_model.input, outputs=top_model(base_model.output))
-        return model, base_model, top_model
+        model.summary()
+        return model

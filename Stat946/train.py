@@ -159,7 +159,7 @@ if __name__ == '__main__':
 
     #VGG16
 
-    size = 48
+    '''size = 48
     train_data, test_data = upscale_images(train_data, test_data, size)
     VGG_obj = models.VGG16Keras_fast()
     model = VGG_obj.model
@@ -186,23 +186,24 @@ if __name__ == '__main__':
         all_layers[i].trainable = False
     predict_for_Model(model2, test_data)
     different_train_unfrozen(model2, train_data, train_label, test_data, 0.001,
-        5, 1, "VGG16_48_keras_unfrozen_black_pool3.h5")
+        5, 1, "VGG16_48_keras_unfrozen_black_pool3.h5")'''
 
 
 
     #RESNET50
-    '''size = 224
+    size = 224
     train_data, test_data = upscale_images(train_data, test_data, size)
     ResNet_obj = models.ResNet50Keras_fast()
     ResNet_model = ResNet_obj.model
     predict_for_Model(ResNet_model, test_data)
     ResNet_base_model = ResNet_obj.base_model
     different_train(ResNet_model,ResNet_base_model, train_data, train_label, test_data, False, 0.1,
-        10, 5, "Resnet50.h5", "Resnet50_224_features_train.npz", "Resnet50_224_features_test.npz")
+        5, 5, "Resnet50.h5", "Resnet50_224_features_train.npz", "Resnet50_224_features_test.npz")
 
     #model.load_weights("Resnet50.h5")
     ResNet_obj1 = models.ResNet50Keras_fast_unfrozen()
     ResNet_model1 = ResNet_obj1.model
+    ResNet_model1.summary()
     #model1.load_weights("Resnet50.h5")
     predict_for_Model(ResNet_model1, test_data)
     Resnet_mid_start = ResNet_model1.get_layer('activation_40')
@@ -215,6 +216,7 @@ if __name__ == '__main__':
 
     ResNet_obj2 = models.ResNet50Keras_fast_unfrozen()
     ResNet_model2 = ResNet_obj2.model
+    ResNet_model2.summary()
     ResNet_model2.load_weights('Resnet50_224_keras_activation_40.h5')
     predict_for_Model(ResNet_model2, test_data)
     mid_start = ResNet_model2.get_layer('activation_31')
@@ -225,7 +227,7 @@ if __name__ == '__main__':
     #model.summary()
 
     different_train_unfrozen(model1, train_data, train_label, test_data, 0.001,
-        3, 2, "Resnet50_224_keras_activation_31.h5")'''
+        3, 2, "Resnet50_224_keras_activation_31.h5")
 
     
     '''
