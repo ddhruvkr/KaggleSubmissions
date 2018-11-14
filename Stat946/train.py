@@ -195,7 +195,6 @@ if __name__ == '__main__':
     train_data, test_data = upscale_images(train_data, test_data, size)
     ResNet_obj = models.ResNet50Keras_fast()
     ResNet_model = ResNet_obj.model
-    predict_for_Model(ResNet_model, test_data)
     ResNet_base_model = ResNet_obj.base_model
     different_train(ResNet_model,ResNet_base_model, train_data, train_label, test_data, False, 0.1,
         5, 5, "Resnet50.h5", "Resnet50_224_features_train.npz", "Resnet50_224_features_test.npz")
@@ -206,11 +205,11 @@ if __name__ == '__main__':
     ResNet_model1.summary()
     #model1.load_weights("Resnet50.h5")
     predict_for_Model(ResNet_model1, test_data)
-    Resnet_mid_start = ResNet_model1.get_layer('activation_40')
+    Resnet_mid_start = ResNet_model1.get_layer('activation_89')
     all_layers = ResNet_model1.layers
     for i in range(ResNet_model1.layers.index(Resnet_mid_start)):
         all_layers[i].trainable = False
-    different_train_unfrozen(model1, train_data, train_label, test_data, 0.01,
+    different_train_unfrozen(ResNet_model1, train_data, train_label, test_data, 0.01,
         3, 2, "Resnet50_224_keras_activation_40.h5")
     
 
@@ -226,7 +225,7 @@ if __name__ == '__main__':
 
     #model.summary()
 
-    different_train_unfrozen(model1, train_data, train_label, test_data, 0.001,
+    different_train_unfrozen(ResNet_model2, train_data, train_label, test_data, 0.001,
         3, 2, "Resnet50_224_keras_activation_31.h5")
 
     
