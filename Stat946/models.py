@@ -179,14 +179,6 @@ class ResNet50Keras_fast_unfrozen:
         base_model = ResNet50(weights = 'imagenet', include_top=False, input_shape=self.x_shape)
         #print ('base model summary')
         #base_model.summary()
-        for layer in base_model.layers:
-            layer.trainable = False
-        '''mid_start = base_model.get_layer('activation_40')
-        all_layers = base_model.layers
-        for i in range(base_model.layers.index(mid_start)):
-            #print(i)
-            all_layers[i].trainable = False'''
-
        
         top_model = Sequential()
         #model.add(GlobalAveragePooling2D(input_shape=[1,1,512]))
@@ -203,25 +195,4 @@ class ResNet50Keras_fast_unfrozen:
         #top_model.summary()
 
         model = Model(inputs = base_model.input, outputs=top_model(base_model.output))
-
-        '''top_model = base_model
-
-        x = base_model.output
-        x = GlobalMaxPooling2D()(x)
-        x = Dropout(0.4)(x)
-        # let's add a fully-connected layer
-        x = Dense(1024, activation='relu')(x)
-        x = BatchNormalization()(x)
-        x = Dropout(0.5)(x)
-        # and a logistic layer -- let's say we have 200 classes
-        predictions = Dense(self.num_classes, activation='softmax')(x)
-
-        # This is the model we will train
-        model = Model(inputs=base_model.input, outputs=predictions)'''
-        '''mid_start = model.get_layer('activation_40')
-        all_layers = model.layers
-        for i in range(model.layers.index(mid_start)):
-            all_layers[i].trainable = False'''
-        #print('final model summary')
-        #model.summary()
         return model, base_model, top_model
