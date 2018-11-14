@@ -7,16 +7,11 @@ from keras.applications.vgg16 import preprocess_input
 from keras.datasets import cifar100
 
 def get_inputs():
-	#(train_data, train_label), (test_data, y_test) = cifar100.load_data(label_mode='fine')
-	#print("first one")
-	#print(test_data)
 	with open('./data/train_data', 'rb') as f:
 	    train_data = pickle.load(f)
 	    train_label= pickle.load(f)
 	with open('./data/test_data', 'rb') as f:
 	    test_data = pickle.load(f)
-	#print("seconf one")
-	#print(test_data)
 	return train_data, train_label, test_data
 
 def get_processed_data():

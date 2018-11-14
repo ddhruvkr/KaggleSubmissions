@@ -1,9 +1,7 @@
 from keras.datasets import cifar100
 
 
-def predict(model,test_data,normalize=True):
-    '''if normalize:
-        x = self.normalize_production(x)'''
+def predict(model,test_data):
     predictions = model.predict_classes(test_data, verbose=1)
     get_accuracy(model, predictions)
 
@@ -23,9 +21,7 @@ def get_accuracy(model, predictions):
 			correct += 1
 	print (correct/x_test.shape[0])
 
-def predict_fast(model,test_data, test_data_features,normalize=True):
-    '''if normalize:
-        x = self.normalize_production(x)'''
+def predict_fast(model,test_data, test_data_features):
     predictions = model.predict_classes(test_data_features, verbose=1)
     get_accuracy(model, predictions)
     f = open('Submission_Resnet50_224_acc_confirm.csv', 'w')
@@ -36,13 +32,11 @@ def predict_fast(model,test_data, test_data_features,normalize=True):
 
     f.close()
 
-def predict_for_Model(model,test_data,normalize=True):
-    '''if normalize:
-        x = self.normalize_production(x)'''
+def predict_for_Model(model,test_data):
     predictions = model.predict(test_data, verbose=1)
     predictions = predictions.argmax(axis=-1)
     get_accuracy(model, predictions)
-    f = open('Submission_VGG16_48_unfrozen_blackpool3.csv', 'w')
+    f = open('Submission.csv', 'w')
     f.write('ids,labels\n')
 
     for i in range(0, test_data.shape[0]):
@@ -50,9 +44,7 @@ def predict_for_Model(model,test_data,normalize=True):
 
     f.close()
 
-def predict_fast_for_Model(model,test_data, test_data_features,normalize=True):
-    '''if normalize:
-        x = self.normalize_production(x)'''
+def predict_fast_for_Model(model,test_data, test_data_features):
     predictions = model.predict(test_data_features, verbose=1)
     print(predictions)
     predictions = predictions.argmax(axis=-1)
@@ -78,9 +70,7 @@ def load_predict_save(model, test_data, test_data_features):
 	model.load_weights('resnet50keras_fast_checkpoint_acc.hf')
 	predict_fast(model, test_data, test_data_features)
 
-def predict_fast_unfrozen(model,test_data,normalize=True):
-    '''if normalize:
-        x = self.normalize_production(x)'''
+def predict_fast_unfrozen(model,test_data):
     predictions = model.predict_classes(test_data, verbose=1)
     get_accuracy(model, predictions)
     
